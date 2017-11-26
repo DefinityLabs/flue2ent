@@ -3,7 +3,7 @@ package io.github.definitylabs.flue2ent;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.FluentWait;
 
-public final class Website {
+public class Website {
 
     private final WebDriver driver;
     private final String url;

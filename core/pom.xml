@@ -11,7 +11,7 @@
     <artifactId>flue2ent-core</artifactId>
     <packaging>jar</packaging>
 
-    <name>FLue2ent Core</name>
+    <name>Flue2ent Core</name>
     <url>https://definitylabs.github.io/#/products/flue2ent</url>
 
     <properties>
