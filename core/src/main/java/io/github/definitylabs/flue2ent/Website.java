@@ -54,7 +54,7 @@ public class Website {
                 .collect(Collectors.toList());
     }
 
-    public WebContentDsl at(WebContentDsl content) {
+    public <T extends WebContentDsl> T at(T content) {
         content.setWebsite(this);
         return content;
     }
