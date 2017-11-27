@@ -41,17 +41,17 @@ public class WebElementWrapper {
         return webElement.isSelected();
     }
 
-    public WebElementWrapper findElement(By by) {
+    public final WebElementWrapper findElement(By by) {
         return new WebElementWrapper(webElement.findElement(by));
     }
 
-    public List<WebElementWrapper> findElements(By by) {
+    public final List<WebElementWrapper> findElements(By by) {
         return webElement.findElements(by).stream()
                 .map(WebElementWrapper::new)
                 .collect(Collectors.toList());
     }
 
-    public <V> Supplier<V> has(Function<WebElementWrapper, V> isTrue) {
+    public final <V> Supplier<V> has(Function<WebElementWrapper, V> isTrue) {
         return () -> isTrue.apply(this);
     }
 

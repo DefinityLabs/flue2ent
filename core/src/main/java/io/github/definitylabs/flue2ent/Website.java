@@ -1,5 +1,6 @@
 package io.github.definitylabs.flue2ent;
 
+import io.github.definitylabs.flue2ent.dsl.WebContentDsl;
 import io.github.definitylabs.flue2ent.element.WebElementWrapper;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -51,6 +52,11 @@ public class Website {
         return driver.findElements(by).stream()
                 .map(WebElementWrapper::new)
                 .collect(Collectors.toList());
+    }
+
+    public WebContentDsl at(WebContentDsl content) {
+        content.setWebsite(this);
+        return content;
     }
 
     public static final class WebsiteBuilder {

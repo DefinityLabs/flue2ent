@@ -1,5 +1,6 @@
 package io.github.definitylabs.flue2ent;
 
+import io.github.definitylabs.flue2ent.dsl.WebContentDsl;
 import io.github.definitylabs.flue2ent.element.WebElementWrapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -117,6 +118,17 @@ public class WebsiteTest {
         assertThat(selects).hasSize(2);
         assertThat(selects.get(0).webElement()).isSameAs(mockedSelectOne);
         assertThat(selects.get(1).webElement()).isSameAs(mockedSelectTwo);
+    }
+
+    @Test
+    public void at_setsDriverAndReturnsParameter() {
+        WebContentDsl webContentDsl = mock(WebContentDsl.class);
+
+        Website website = Website.with(driver).visit(TEST_WEBSITE_URL);
+        WebContentDsl at = website.at(webContentDsl);
+
+        verify(webContentDsl).setWebsite(website);
+        assertThat(at).isSameAs(webContentDsl);
     }
 
 }
