@@ -1,7 +1,12 @@
 package io.github.definitylabs.flue2ent;
 
+import io.github.definitylabs.flue2ent.element.WebElementWrapper;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.FluentWait;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Website {
 
@@ -36,6 +41,16 @@ public class Website {
 
     public WebsiteWaiter justWait() {
         return new WebsiteWaiter(this, new FluentWait<>(driver));
+    }
+
+    public WebElementWrapper findElement(By by) {
+        return new WebElementWrapper(driver.findElement(by));
+    }
+
+    public List<WebElementWrapper> findElements(By by) {
+        return driver.findElements(by).stream()
+                .map(WebElementWrapper::new)
+                .collect(Collectors.toList());
     }
 
     public static final class WebsiteBuilder {

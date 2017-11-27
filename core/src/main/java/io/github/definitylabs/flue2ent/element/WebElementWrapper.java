@@ -4,6 +4,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 import java.util.List;
+import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class WebElementWrapper {
@@ -47,6 +49,10 @@ public class WebElementWrapper {
         return webElement.findElements(by).stream()
                 .map(WebElementWrapper::new)
                 .collect(Collectors.toList());
+    }
+
+    public <V> Supplier<V> has(Function<WebElementWrapper, V> isTrue) {
+        return () -> isTrue.apply(this);
     }
 
 }

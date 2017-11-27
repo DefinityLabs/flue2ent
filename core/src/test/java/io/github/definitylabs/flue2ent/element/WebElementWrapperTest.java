@@ -9,6 +9,7 @@ import org.openqa.selenium.WebElement;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Supplier;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
@@ -117,6 +118,15 @@ public class WebElementWrapperTest {
         assertThat(wrappedElements).hasSize(2);
         assertThat(wrappedElements.get(0).webElement()).isSameAs(mockedElementOne);
         assertThat(wrappedElements.get(1).webElement()).isSameAs(mockedElementTwo);
+    }
+
+    @Test
+    public void has_returnsSupplier() {
+        WebElementWrapper wrapper = new WebElementWrapper(webElement);
+
+        Supplier<WebElementWrapper> supplier = wrapper.has(element -> element);
+
+        assertThat(supplier.get()).isSameAs(wrapper);
     }
 
 }
