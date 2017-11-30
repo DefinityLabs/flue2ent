@@ -44,12 +44,33 @@ public class WebElementWrapperTest {
     }
 
     @Test
+    public void enter_callsWebElementSendKeys() {
+        WebElementWrapper wrapper = new WebElementWrapper(webElement);
+
+        String text = "text";
+        WebElementWrapper webElementWrapper = wrapper.enter(text);
+
+        verify(webElement).sendKeys(text);
+        assertThat(webElementWrapper).isSameAs(wrapper);
+    }
+
+    @Test
     public void click_callsWebElementClick() {
         WebElementWrapper wrapper = new WebElementWrapper(webElement);
 
         WebElementWrapper webElementWrapper = wrapper.click();
 
         verify(webElement).click();
+        assertThat(webElementWrapper).isSameAs(wrapper);
+    }
+
+    @Test
+    public void submit_callsWebElementSubmit() {
+        WebElementWrapper wrapper = new WebElementWrapper(webElement);
+
+        WebElementWrapper webElementWrapper = wrapper.submit();
+
+        verify(webElement).submit();
         assertThat(webElementWrapper).isSameAs(wrapper);
     }
 

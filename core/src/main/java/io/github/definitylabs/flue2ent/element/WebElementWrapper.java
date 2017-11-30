@@ -28,6 +28,16 @@ public class WebElementWrapper {
         return webElement.getText();
     }
 
+    public final WebElementWrapper enter(CharSequence... text) {
+        webElement.sendKeys(text);
+        return this;
+    }
+
+    public final WebElementWrapper submit() {
+        webElement.submit();
+        return this;
+    }
+
     public final WebElementWrapper click() {
         webElement.click();
         return this;
