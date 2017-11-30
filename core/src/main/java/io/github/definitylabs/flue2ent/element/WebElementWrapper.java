@@ -1,5 +1,7 @@
 package io.github.definitylabs.flue2ent.element;
 
+import org.assertj.core.api.AbstractObjectAssert;
+import org.assertj.core.api.Assertions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
@@ -7,6 +9,8 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+
+import static java.util.function.Function.identity;
 
 public class WebElementWrapper {
 
@@ -53,6 +57,15 @@ public class WebElementWrapper {
 
     public final <V> Supplier<V> has(Function<WebElementWrapper, V> isTrue) {
         return () -> isTrue.apply(this);
+    }
+
+    public final AbstractObjectAssert<?, WebElementWrapper> assertThis() {
+        return assertThat(identity());
+    }
+
+    public final <T> AbstractObjectAssert<?, T> assertThat(Function<WebElementWrapper, T> value) {
+        return Assertions.assertThat(value.apply(this));
+
     }
 
 }

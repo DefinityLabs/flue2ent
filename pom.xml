@@ -18,6 +18,7 @@
     </properties>
 
     <dependencies>
+        <!-- TEST -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
