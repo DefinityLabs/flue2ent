@@ -65,6 +65,10 @@ public class WebElementWrapper {
                 .collect(Collectors.toList());
     }
 
+    public final <T extends WebElementDecorator> T as(Function<WebElementWrapper, T> decorator) {
+        return decorator.apply(this);
+    }
+
     public final <V> Supplier<V> has(Function<WebElementWrapper, V> isTrue) {
         return () -> isTrue.apply(this);
     }

@@ -142,6 +142,15 @@ public class WebElementWrapperTest {
     }
 
     @Test
+    public void as_returnsDecorator() {
+        WebElementWrapper wrapper = new WebElementWrapper(webElement);
+
+        SpecialElement specialElement = wrapper.as(SpecialElement::new);
+        assertThat(specialElement).isNotNull();
+        assertThat(specialElement.element).isSameAs(wrapper);
+    }
+
+    @Test
     public void has_returnsSupplier() {
         WebElementWrapper wrapper = new WebElementWrapper(webElement);
 
@@ -167,5 +176,10 @@ public class WebElementWrapperTest {
         wrapper.assertThat(WebElementWrapper::text).isEqualTo(text);
     }
 
+    class SpecialElement extends WebElementDecorator {
+        public SpecialElement(WebElementWrapper element) {
+            super(element);
+        }
+    }
 
 }
