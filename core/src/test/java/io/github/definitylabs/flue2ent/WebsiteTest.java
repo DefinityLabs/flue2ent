@@ -2,16 +2,24 @@ package io.github.definitylabs.flue2ent;
 
 import io.github.definitylabs.flue2ent.dsl.WebContentDsl;
 import io.github.definitylabs.flue2ent.element.WebElementWrapper;
+import org.apache.commons.io.FileUtils;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openqa.selenium.By;
+import org.openqa.selenium.OutputType;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Consumer;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -20,6 +28,9 @@ import static org.mockito.Mockito.*;
 public class WebsiteTest {
 
     private static final String TEST_WEBSITE_URL = "https://google.com";
+
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
 
     @Mock
     private WebDriver driver;
@@ -144,6 +155,74 @@ public class WebsiteTest {
 
         verify(webContentDsl).setWebsite(website);
         assertThat(at).isSameAs(webElementWrapper);
+    }
+
+    @Test
+    public void screenshot_takeAsBytes_executesConsumer() {
+        Consumer<byte[]> mockedConsumer = mock(Consumer.class);
+
+        byte[] screenshotBytes = new byte[0];
+
+        RemoteWebDriver mockedDriver = mock(RemoteWebDriver.class);
+        when(mockedDriver.getScreenshotAs(OutputType.BYTES)).thenReturn(screenshotBytes);
+
+        Website website = Website.with(mockedDriver).visit(TEST_WEBSITE_URL);
+        website.screenshot().takeAsBytes(mockedConsumer);
+
+        verify(mockedConsumer).accept(screenshotBytes);
+    }
+
+    @Test
+    public void screenshot_takeAsFile_executesConsumer() {
+        Consumer<File> mockedConsumer = mock(Consumer.class);
+
+        File file = mock(File.class);
+
+        RemoteWebDriver mockedDriver = mock(RemoteWebDriver.class);
+        when(mockedDriver.getScreenshotAs(OutputType.FILE)).thenReturn(file);
+
+        Website website = Website.with(mockedDriver).visit(TEST_WEBSITE_URL);
+        website.screenshot().takeAsFile(mockedConsumer);
+
+        verify(mockedConsumer).accept(file);
+    }
+
+    @Test
+    public void screenshot_take_executesConsumer() throws IOException {
+        File file = File.createTempFile("temporary", ".png");
+
+        RemoteWebDriver mockedDriver = mock(RemoteWebDriver.class);
+        when(mockedDriver.getScreenshotAs(OutputType.FILE)).thenReturn(file);
+
+        Website website = Website.with(mockedDriver).visit(TEST_WEBSITE_URL);
+        website.screenshot().take();
+
+        File folder = new File("screenshot");
+        assertThat(folder.exists()).isTrue();
+        assertThat(folder.isDirectory()).isTrue();
+        assertThat(folder.listFiles()).hasSize(1);
+
+        FileUtils.forceDeleteOnExit(folder);
+    }
+
+    @Test
+    public void screenshot_take_whenCopyThrowsIOException_throwsRuntimeException() throws IOException {
+        File file = mock(File.class);
+
+        RemoteWebDriver mockedDriver = mock(RemoteWebDriver.class);
+        when(mockedDriver.getScreenshotAs(OutputType.FILE)).thenReturn(file);
+
+        expectedException.expect(RuntimeException.class);
+        expectedException.expectMessage("Cannot save screenshot file");
+
+        Website website = Website.with(mockedDriver).visit(TEST_WEBSITE_URL);
+
+        try {
+            website.screenshot().take();
+        } finally {
+            File folder = new File("screenshot");
+            FileUtils.forceDeleteOnExit(folder);
+        }
     }
 
 }

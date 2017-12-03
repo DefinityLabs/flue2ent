@@ -16,9 +16,15 @@
 
     <properties>
         <selenium.version>3.7.1</selenium.version>
+        <commons-io.version>2.6</commons-io.version>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${commons-io.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>

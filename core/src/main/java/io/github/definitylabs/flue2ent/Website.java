@@ -2,14 +2,24 @@ package io.github.definitylabs.flue2ent;
 
 import io.github.definitylabs.flue2ent.dsl.WebContentDsl;
 import io.github.definitylabs.flue2ent.element.WebElementWrapper;
+import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.FluentWait;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class Website {
+
+    private static final SimpleDateFormat timestampFormat = new SimpleDateFormat("yyyyMMddHHmmssSSS");
 
     private final WebDriver driver;
     private final String url;
@@ -59,6 +69,10 @@ public class Website {
         return content.getResponse();
     }
 
+    public Screenshot screenshot() {
+        return new Screenshot((TakesScreenshot) driver);
+    }
+
     public static final class WebsiteBuilder {
 
         private final WebDriver driver;
@@ -69,6 +83,42 @@ public class Website {
 
         public Website visit(String url) {
             return new Website(driver, url);
+        }
+
+    }
+
+    public final class Screenshot {
+
+        private static final String SCREENSHOT_DIRECTORY_NAME = "screenshot";
+        private final TakesScreenshot driver;
+
+        private Screenshot(TakesScreenshot driver) {
+            this.driver = driver;
+        }
+
+        public void takeAsBytes(Consumer<byte[]> consumer) {
+            byte[] screenshotAsBytes = driver.getScreenshotAs(OutputType.BYTES);
+            consumer.accept(screenshotAsBytes);
+        }
+
+        public void takeAsFile(Consumer<File> consumer) {
+            File screenshotAsFile = driver.getScreenshotAs(OutputType.FILE);
+            consumer.accept(screenshotAsFile);
+        }
+
+        public void take() {
+            takeAsFile(file -> {
+                File screenshotDirectory = new File(SCREENSHOT_DIRECTORY_NAME);
+                String fileName = "screenshot_" + timestampFormat.format(new Date()) + ".png";
+                File screenshotFile = new File(screenshotDirectory, fileName);
+
+                try {
+                    FileUtils.forceMkdir(screenshotDirectory);
+                    FileUtils.copyFile(file, screenshotFile);
+                } catch (IOException e) {
+                    throw new RuntimeException("Cannot save screenshot file", e);
+                }
+            });
         }
 
     }
