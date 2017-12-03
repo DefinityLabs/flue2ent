@@ -11,4 +11,5 @@ public abstract class WebElementDecorator {
     public WebElementWrapper webElement() {
         return webElement;
     }
+
 }
