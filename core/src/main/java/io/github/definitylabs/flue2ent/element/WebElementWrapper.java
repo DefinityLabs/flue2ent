@@ -79,7 +79,6 @@ public class WebElementWrapper {
 
     public final <T> AbstractObjectAssert<?, T> assertThat(Function<WebElementWrapper, T> value) {
         return Assertions.assertThat(value.apply(this));
-
     }
 
 }
