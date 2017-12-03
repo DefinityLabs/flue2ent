@@ -3,10 +3,7 @@ package io.github.definitylabs.flue2ent;
 import io.github.definitylabs.flue2ent.dsl.WebContentDsl;
 import io.github.definitylabs.flue2ent.element.WebElementWrapper;
 import org.apache.commons.io.FileUtils;
-import org.openqa.selenium.By;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.FluentWait;
 
 import java.io.File;
@@ -73,6 +70,10 @@ public class Website {
         return new Screenshot((TakesScreenshot) driver);
     }
 
+    public Scroll scroll() {
+        return new Scroll((JavascriptExecutor) driver);
+    }
+
     public static final class WebsiteBuilder {
 
         private final WebDriver driver;
@@ -119,6 +120,43 @@ public class Website {
                     throw new RuntimeException("Cannot save screenshot file", e);
                 }
             });
+        }
+
+    }
+
+    public class Scroll {
+
+        private final JavascriptExecutor driver;
+
+        private Scroll(JavascriptExecutor driver) {
+            this.driver = driver;
+        }
+
+        public Scroll top() {
+            return to(0, 0);
+        }
+
+        public Scroll up() {
+            return by(0, -250);
+        }
+
+        public Scroll down() {
+            return by(0, 250);
+        }
+
+        public Scroll bottom() {
+            driver.executeScript("window.scrollTo(0, document.body.scrollHeight);");
+            return this;
+        }
+
+        public Scroll to(int x, int y) {
+            driver.executeScript("window.scrollTo(" + x + ", " + y + ");");
+            return this;
+        }
+
+        public Scroll by(int x, int y) {
+            driver.executeScript("window.scrollBy(" + x + ", " + y + ");");
+            return this;
         }
 
     }

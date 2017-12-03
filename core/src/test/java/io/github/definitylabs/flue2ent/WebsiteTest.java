@@ -188,7 +188,7 @@ public class WebsiteTest {
     }
 
     @Test
-    public void screenshot_take_executesConsumer() throws IOException {
+    public void screenshot_take_savesFileToScreenshotDirectory() throws IOException {
         File file = File.createTempFile("temporary", ".png");
 
         RemoteWebDriver mockedDriver = mock(RemoteWebDriver.class);
@@ -223,6 +223,84 @@ public class WebsiteTest {
             File folder = new File("screenshot");
             FileUtils.forceDeleteOnExit(folder);
         }
+    }
+
+    @Test
+    public void scroll_top_executesJavascript() {
+        RemoteWebDriver mockedDriver = mock(RemoteWebDriver.class);
+        Website website = Website.with(mockedDriver).visit(TEST_WEBSITE_URL);
+
+        Website.Scroll scroll = website.scroll();
+        Website.Scroll result = scroll.top();
+
+        verify(mockedDriver).executeScript("window.scrollTo(0, 0);");
+
+        assertThat(result).isSameAs(scroll);
+    }
+
+    @Test
+    public void scroll_up_executesJavascript() {
+        RemoteWebDriver mockedDriver = mock(RemoteWebDriver.class);
+        Website website = Website.with(mockedDriver).visit(TEST_WEBSITE_URL);
+
+        Website.Scroll scroll = website.scroll();
+        Website.Scroll result = scroll.up();
+
+        verify(mockedDriver).executeScript("window.scrollBy(0, -250);");
+
+        assertThat(result).isSameAs(scroll);
+    }
+
+    @Test
+    public void scroll_down_executesJavascript() {
+        RemoteWebDriver mockedDriver = mock(RemoteWebDriver.class);
+        Website website = Website.with(mockedDriver).visit(TEST_WEBSITE_URL);
+
+        Website.Scroll scroll = website.scroll();
+        Website.Scroll result = scroll.down();
+
+        verify(mockedDriver).executeScript("window.scrollBy(0, 250);");
+
+        assertThat(result).isSameAs(scroll);
+    }
+
+    @Test
+    public void scroll_bottom_executesJavascript() {
+        RemoteWebDriver mockedDriver = mock(RemoteWebDriver.class);
+        Website website = Website.with(mockedDriver).visit(TEST_WEBSITE_URL);
+
+        Website.Scroll scroll = website.scroll();
+        Website.Scroll result = scroll.bottom();
+
+        verify(mockedDriver).executeScript("window.scrollTo(0, document.body.scrollHeight);");
+
+        assertThat(result).isSameAs(scroll);
+    }
+
+    @Test
+    public void scroll_by_executesJavascript() {
+        RemoteWebDriver mockedDriver = mock(RemoteWebDriver.class);
+        Website website = Website.with(mockedDriver).visit(TEST_WEBSITE_URL);
+
+        Website.Scroll scroll = website.scroll();
+        Website.Scroll result = scroll.by(10, 20);
+
+        verify(mockedDriver).executeScript("window.scrollBy(10, 20);");
+
+        assertThat(result).isSameAs(scroll);
+    }
+
+    @Test
+    public void scroll_to_executesJavascript() {
+        RemoteWebDriver mockedDriver = mock(RemoteWebDriver.class);
+        Website website = Website.with(mockedDriver).visit(TEST_WEBSITE_URL);
+
+        Website.Scroll scroll = website.scroll();
+        Website.Scroll result = scroll.to(100, 200);
+
+        verify(mockedDriver).executeScript("window.scrollTo(100, 200);");
+
+        assertThat(result).isSameAs(scroll);
     }
 
 }
