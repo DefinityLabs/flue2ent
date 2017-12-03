@@ -158,6 +158,17 @@ public class WebsiteTest {
     }
 
     @Test
+    public void refresh_callsNavigateRefresh() {
+        WebDriver.Navigation navigation = mock(WebDriver.Navigation.class);
+        when(driver.navigate()).thenReturn(navigation);
+
+        Website website = Website.with(driver).visit(TEST_WEBSITE_URL);
+        website.refresh();
+
+        verify(navigation).refresh();
+    }
+
+    @Test
     public void screenshot_takeAsBytes_executesConsumer() {
         Consumer<byte[]> mockedConsumer = mock(Consumer.class);
 
@@ -301,6 +312,40 @@ public class WebsiteTest {
         verify(mockedDriver).executeScript("window.scrollTo(100, 200);");
 
         assertThat(result).isSameAs(scroll);
+    }
+
+    @Test
+    public void javasScript_execute_callsExecuteScript() {
+        RemoteWebDriver mockedDriver = mock(RemoteWebDriver.class);
+
+        Object response = new Object();
+        when(mockedDriver.executeScript(anyString(), anyString())).thenReturn(response);
+
+        Website website = Website.with(mockedDriver).visit(TEST_WEBSITE_URL);
+
+        String script = "js script";
+
+        Object result = website.javaScript().execute(script, "paramOne");
+
+        verify(mockedDriver).executeScript(script, "paramOne");
+        assertThat(result).isSameAs(response);
+    }
+
+    @Test
+    public void javasScript_executeAsync_callsExecuteAsyncScript() {
+        RemoteWebDriver mockedDriver = mock(RemoteWebDriver.class);
+
+        Object response = new Object();
+        when(mockedDriver.executeAsyncScript(anyString(), anyString())).thenReturn(response);
+
+        Website website = Website.with(mockedDriver).visit(TEST_WEBSITE_URL);
+
+        String script = "js script";
+
+        Object result = website.javaScript().executeAsync(script, "paramOne");
+
+        verify(mockedDriver).executeAsyncScript(script, "paramOne");
+        assertThat(result).isSameAs(response);
     }
 
 }

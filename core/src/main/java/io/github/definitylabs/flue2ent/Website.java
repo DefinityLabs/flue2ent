@@ -66,12 +66,21 @@ public class Website {
         return content.getResponse();
     }
 
+    public Website refresh() {
+        driver.navigate().refresh();
+        return this;
+    }
+
     public Screenshot screenshot() {
         return new Screenshot((TakesScreenshot) driver);
     }
 
     public Scroll scroll() {
         return new Scroll((JavascriptExecutor) driver);
+    }
+
+    public JavaScript javaScript() {
+        return new JavaScript((JavascriptExecutor) driver);
     }
 
     public static final class WebsiteBuilder {
@@ -124,7 +133,7 @@ public class Website {
 
     }
 
-    public class Scroll {
+    public final class Scroll {
 
         private final JavascriptExecutor driver;
 
@@ -157,6 +166,26 @@ public class Website {
         public Scroll by(int x, int y) {
             driver.executeScript("window.scrollBy(" + x + ", " + y + ");");
             return this;
+        }
+
+    }
+
+    public final class JavaScript {
+
+        private final JavascriptExecutor driver;
+
+        private JavaScript(JavascriptExecutor driver) {
+            this.driver = driver;
+        }
+
+        @SuppressWarnings("unchecked")
+        public <T> T execute(String script, Object... args) {
+            return (T) driver.executeScript(script, args);
+        }
+
+        @SuppressWarnings("unchecked")
+        public <T> T executeAsync(String script, Object... args) {
+            return (T) driver.executeAsyncScript(script, args);
         }
 
     }
