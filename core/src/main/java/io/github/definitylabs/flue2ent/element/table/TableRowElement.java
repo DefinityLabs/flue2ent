@@ -1,18 +1,18 @@
 package io.github.definitylabs.flue2ent.element.table;
 
+import io.github.definitylabs.flue2ent.element.WebElementDecorator;
 import io.github.definitylabs.flue2ent.element.WebElementWrapper;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public class TableRowElement<C extends TableColumnElement> extends WebElementWrapper {
+public class TableRowElement<C extends TableColumnElement> extends WebElementDecorator {
 
     protected final AbstractTableElement<? extends TableRowElement, C> table;
 
-    protected TableRowElement(WebElement webElement, AbstractTableElement<? extends TableRowElement, C> table) {
+    protected TableRowElement(WebElementWrapper webElement, AbstractTableElement<? extends TableRowElement, C> table) {
         super(webElement);
         this.table = table;
     }

@@ -147,7 +147,7 @@ public class WebElementWrapperTest {
 
         SpecialElement specialElement = wrapper.as(SpecialElement::new);
         assertThat(specialElement).isNotNull();
-        assertThat(specialElement.element).isSameAs(wrapper);
+        assertThat(specialElement.webElement()).isSameAs(wrapper);
     }
 
     @Test
@@ -177,7 +177,7 @@ public class WebElementWrapperTest {
     }
 
     class SpecialElement extends WebElementDecorator {
-        public SpecialElement(WebElementWrapper element) {
+        SpecialElement(WebElementWrapper element) {
             super(element);
         }
     }

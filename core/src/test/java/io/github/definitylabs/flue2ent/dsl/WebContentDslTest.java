@@ -51,4 +51,16 @@ public class WebContentDslTest {
         verify(webContentDsl).init();
     }
 
+    @Test
+    public void getResponse_returnsSameInstance() {
+        class Content extends WebContentDsl<Content> {
+
+        }
+
+        Content content = new Content();
+        Content response = content.getResponse();
+
+        assertThat(response).isSameAs(content);
+    }
+
 }

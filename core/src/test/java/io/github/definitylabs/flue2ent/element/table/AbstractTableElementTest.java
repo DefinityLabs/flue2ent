@@ -1,13 +1,12 @@
 package io.github.definitylabs.flue2ent.element.table;
 
-import io.github.definitylabs.flue2ent.Website;
+import io.github.definitylabs.flue2ent.element.WebElementWrapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 import java.util.Arrays;
@@ -15,55 +14,34 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AbstractTableElementTest {
 
-    @Mock
-    private WebDriver driver;
+    private WebElementWrapper tableWebElement;
 
     @Mock
-    private Website website;
+    private WebElement webElement;
 
-    @Mock
-    private WebElement tableWebElement;
-
-    private By byTable;
     private AbstractTableElement<TableRowElement<TableColumnElement>, TableColumnElement> table;
 
     @Before
     public void beforeEach() {
-        byTable = By.tagName("table");
+        tableWebElement = new WebElementWrapper(webElement);
 
-        this.table = new AbstractTableElement<TableRowElement<TableColumnElement>, TableColumnElement>(byTable) {
+        this.table = new AbstractTableElement<TableRowElement<TableColumnElement>, TableColumnElement>(tableWebElement) {
             @Override
-            protected TableRowElement<TableColumnElement> createRow(WebElement webElement) {
+            protected TableRowElement<TableColumnElement> createRow(WebElementWrapper webElement) {
                 return new TableRowElement<>(webElement, this);
             }
 
             @Override
-            protected TableColumnElement createColumn(WebElement webElement) {
+            protected TableColumnElement createColumn(WebElementWrapper webElement) {
                 return new TableColumnElement(webElement, this);
             }
         };
-
-        when(driver.findElement(byTable)).thenReturn(tableWebElement);
-
-        when(website.getDriver()).thenReturn(driver);
-        this.table.setWebsite(website);
-    }
-
-    @Test
-    public void init_callsDriverFindElement() {
-        verify(driver).findElement(byTable);
-    }
-
-    @Test
-    public void webElement_returnsTableWebElement() {
-        WebElement webElement = table.webElement();
-
-        assertThat(webElement).isSameAs(tableWebElement);
     }
 
     @Test
@@ -71,14 +49,14 @@ public class AbstractTableElementTest {
         WebElement rowOne = mock(WebElement.class);
         WebElement rowTwo = mock(WebElement.class);
 
-        when(tableWebElement.findElements(By.tagName(AbstractTableElement.TABLE_ROW_TAG)))
+        when(webElement.findElements(By.tagName(AbstractTableElement.TABLE_ROW_TAG)))
                 .thenReturn(Arrays.asList(rowOne, rowTwo));
 
         List<TableRowElement<TableColumnElement>> rows = table.rows();
 
         assertThat(rows).hasSize(2);
-        assertThat(rows.get(0).webElement()).isSameAs(rowOne);
-        assertThat(rows.get(1).webElement()).isSameAs(rowTwo);
+        assertThat(rows.get(0).webElement().webElement()).isSameAs(rowOne);
+        assertThat(rows.get(1).webElement().webElement()).isSameAs(rowTwo);
     }
 
     @Test
@@ -86,14 +64,14 @@ public class AbstractTableElementTest {
         WebElement rowOne = mock(WebElement.class);
         WebElement rowTwo = mock(WebElement.class);
 
-        when(tableWebElement.findElements(By.tagName(AbstractTableElement.TABLE_ROW_TAG)))
+        when(webElement.findElements(By.tagName(AbstractTableElement.TABLE_ROW_TAG)))
                 .thenReturn(Arrays.asList(rowOne, rowTwo));
 
         TableRowElement<TableColumnElement> tableRowOne = table.row(0);
         TableRowElement<TableColumnElement> tableRowTwo = table.row(1);
 
-        assertThat(tableRowOne.webElement()).isSameAs(rowOne);
-        assertThat(tableRowTwo.webElement()).isSameAs(rowTwo);
+        assertThat(tableRowOne.webElement().webElement()).isSameAs(rowOne);
+        assertThat(tableRowTwo.webElement().webElement()).isSameAs(rowTwo);
     }
 
     @Test
@@ -101,10 +79,10 @@ public class AbstractTableElementTest {
         WebElement rowOne = mock(WebElement.class);
         WebElement rowTwo = mock(WebElement.class);
 
-        when(tableWebElement.findElements(By.tagName(AbstractTableElement.TABLE_ROW_TAG)))
+        when(webElement.findElements(By.tagName(AbstractTableElement.TABLE_ROW_TAG)))
                 .thenReturn(Arrays.asList(rowOne, rowTwo));
 
-        boolean contains = table.contains(row -> row.webElement() == rowTwo);
+        boolean contains = table.contains(row -> row.webElement().webElement() == rowTwo);
 
         assertThat(contains).isTrue();
     }
@@ -114,7 +92,7 @@ public class AbstractTableElementTest {
         WebElement rowOne = mock(WebElement.class);
         WebElement rowTwo = mock(WebElement.class);
 
-        when(tableWebElement.findElements(By.tagName(AbstractTableElement.TABLE_ROW_TAG)))
+        when(webElement.findElements(By.tagName(AbstractTableElement.TABLE_ROW_TAG)))
                 .thenReturn(Arrays.asList(rowOne, rowTwo));
 
         boolean contains = table.contains(row -> false);
@@ -127,12 +105,12 @@ public class AbstractTableElementTest {
         WebElement rowOne = mock(WebElement.class);
         WebElement rowTwo = mock(WebElement.class);
 
-        when(tableWebElement.findElements(By.tagName(AbstractTableElement.TABLE_ROW_TAG)))
+        when(webElement.findElements(By.tagName(AbstractTableElement.TABLE_ROW_TAG)))
                 .thenReturn(Arrays.asList(rowOne, rowTwo));
 
-        TableRowElement<TableColumnElement> tableRow = table.find(row -> row.webElement() == rowTwo);
+        TableRowElement<TableColumnElement> tableRow = table.find(row -> row.webElement().webElement() == rowTwo);
 
-        assertThat(tableRow.webElement()).isSameAs(rowTwo);
+        assertThat(tableRow.webElement().webElement()).isSameAs(rowTwo);
     }
 
     @Test
@@ -140,7 +118,7 @@ public class AbstractTableElementTest {
         WebElement rowOne = mock(WebElement.class);
         WebElement rowTwo = mock(WebElement.class);
 
-        when(tableWebElement.findElements(By.tagName(AbstractTableElement.TABLE_ROW_TAG)))
+        when(webElement.findElements(By.tagName(AbstractTableElement.TABLE_ROW_TAG)))
                 .thenReturn(Arrays.asList(rowOne, rowTwo));
 
         TableRowElement<TableColumnElement> tableRow = table.find(row -> false);
@@ -153,13 +131,13 @@ public class AbstractTableElementTest {
         WebElement rowOne = mock(WebElement.class);
         WebElement rowTwo = mock(WebElement.class);
 
-        when(tableWebElement.findElements(By.tagName(AbstractTableElement.TABLE_ROW_TAG)))
+        when(webElement.findElements(By.tagName(AbstractTableElement.TABLE_ROW_TAG)))
                 .thenReturn(Arrays.asList(rowOne, rowTwo));
 
-        List<TableRowElement<TableColumnElement>> rows = table.findAll(row -> row.webElement() == rowTwo);
+        List<TableRowElement<TableColumnElement>> rows = table.findAll(row -> row.webElement().webElement() == rowTwo);
 
         assertThat(rows).hasSize(1);
-        assertThat(rows.get(0).webElement()).isSameAs(rowTwo);
+        assertThat(rows.get(0).webElement().webElement()).isSameAs(rowTwo);
     }
 
     @Test
@@ -167,10 +145,10 @@ public class AbstractTableElementTest {
         WebElement rowOne = mock(WebElement.class);
         WebElement rowTwo = mock(WebElement.class);
 
-        when(tableWebElement.findElements(By.tagName(AbstractTableElement.TABLE_ROW_TAG)))
+        when(webElement.findElements(By.tagName(AbstractTableElement.TABLE_ROW_TAG)))
                 .thenReturn(Arrays.asList(rowOne, rowTwo));
 
-        Supplier<Boolean> has = table.has(row -> row.webElement() == rowTwo);
+        Supplier<Boolean> has = table.has(row -> row.webElement().webElement() == rowTwo);
 
         assertThat(has.get()).isTrue();
     }
@@ -180,7 +158,7 @@ public class AbstractTableElementTest {
         WebElement rowOne = mock(WebElement.class);
         WebElement rowTwo = mock(WebElement.class);
 
-        when(tableWebElement.findElements(By.tagName(AbstractTableElement.TABLE_ROW_TAG)))
+        when(webElement.findElements(By.tagName(AbstractTableElement.TABLE_ROW_TAG)))
                 .thenReturn(Arrays.asList(rowOne, rowTwo));
 
         Supplier<Boolean> has = table.has(row -> false);

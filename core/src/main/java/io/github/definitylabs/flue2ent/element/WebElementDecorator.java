@@ -1,9 +1,14 @@
 package io.github.definitylabs.flue2ent.element;
 
 public abstract class WebElementDecorator {
-    protected final WebElementWrapper element;
+
+    protected final WebElementWrapper webElement;
 
     protected WebElementDecorator(WebElementWrapper element) {
-        this.element = element;
+        this.webElement = element;
+    }
+
+    public WebElementWrapper webElement() {
+        return webElement;
     }
 }

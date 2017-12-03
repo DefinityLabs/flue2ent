@@ -3,7 +3,7 @@ package io.github.definitylabs.flue2ent.dsl;
 import io.github.definitylabs.flue2ent.Website;
 import org.openqa.selenium.WebDriver;
 
-public abstract class WebContentDsl {
+public abstract class WebContentDsl<T> {
 
     private Website website;
 
@@ -22,6 +22,11 @@ public abstract class WebContentDsl {
     public final void setWebsite(Website website) {
         this.website = website;
         init();
+    }
+
+    @SuppressWarnings("unchecked")
+    public T getResponse() {
+        return (T) this;
     }
 
     protected void init() {

@@ -1,5 +1,6 @@
 package io.github.definitylabs.flue2ent.element.table;
 
+import io.github.definitylabs.flue2ent.element.WebElementWrapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,18 +22,22 @@ public class TableRowElementTest {
     @Mock
     private WebElement webElement;
 
+    private WebElementWrapper webElementWrapper;
+
     private AbstractTableElement<TableRowElement<TableColumnElement>, TableColumnElement> table;
 
     @Before
     public void beforeEach() {
-        table = new AbstractTableElement<TableRowElement<TableColumnElement>, TableColumnElement>(By.tagName("table")) {
+        webElementWrapper = new WebElementWrapper(webElement);
+
+        table = new AbstractTableElement<TableRowElement<TableColumnElement>, TableColumnElement>(webElementWrapper) {
             @Override
-            protected TableRowElement<TableColumnElement> createRow(WebElement webElement) {
+            protected TableRowElement<TableColumnElement> createRow(WebElementWrapper webElement) {
                 return new TableRowElement<>(webElement, this);
             }
 
             @Override
-            protected TableColumnElement createColumn(WebElement webElement) {
+            protected TableColumnElement createColumn(WebElementWrapper webElement) {
                 return new TableColumnElement(webElement, this);
             }
         };
@@ -46,13 +51,13 @@ public class TableRowElementTest {
         when(webElement.findElements(By.tagName(AbstractTableElement.TABLE_HEADER_TAG)))
                 .thenReturn(Arrays.asList(headerOne, headerTwo));
 
-        TableRowElement<TableColumnElement> tableRow = new TableRowElement<>(webElement, table);
+        TableRowElement<TableColumnElement> tableRow = new TableRowElement<>(webElementWrapper, table);
 
         List<TableColumnElement> headers = tableRow.headers();
 
         assertThat(headers).hasSize(2);
-        assertThat(headers.get(0).webElement()).isSameAs(headerOne);
-        assertThat(headers.get(1).webElement()).isSameAs(headerTwo);
+        assertThat(headers.get(0).webElement().webElement()).isSameAs(headerOne);
+        assertThat(headers.get(1).webElement().webElement()).isSameAs(headerTwo);
     }
 
     @Test
@@ -63,13 +68,13 @@ public class TableRowElementTest {
         when(webElement.findElements(By.tagName(AbstractTableElement.TABLE_COLUMN_TAG)))
                 .thenReturn(Arrays.asList(columnOne, columnTwo));
 
-        TableRowElement<TableColumnElement> tableRow = new TableRowElement<>(webElement, table);
+        TableRowElement<TableColumnElement> tableRow = new TableRowElement<>(webElementWrapper, table);
 
         List<TableColumnElement> columns = tableRow.columns();
 
         assertThat(columns).hasSize(2);
-        assertThat(columns.get(0).webElement()).isSameAs(columnOne);
-        assertThat(columns.get(1).webElement()).isSameAs(columnTwo);
+        assertThat(columns.get(0).webElement().webElement()).isSameAs(columnOne);
+        assertThat(columns.get(1).webElement().webElement()).isSameAs(columnTwo);
     }
 
     @Test
@@ -80,10 +85,10 @@ public class TableRowElementTest {
         when(webElement.findElements(By.tagName(AbstractTableElement.TABLE_COLUMN_TAG)))
                 .thenReturn(Arrays.asList(columnOne, columnTwo));
 
-        TableRowElement<TableColumnElement> tableRow = new TableRowElement<>(webElement, table);
+        TableRowElement<TableColumnElement> tableRow = new TableRowElement<>(webElementWrapper, table);
 
-        assertThat(tableRow.column(0).webElement()).isSameAs(columnOne);
-        assertThat(tableRow.column(1).webElement()).isSameAs(columnTwo);
+        assertThat(tableRow.column(0).webElement().webElement()).isSameAs(columnOne);
+        assertThat(tableRow.column(1).webElement().webElement()).isSameAs(columnTwo);
     }
 
     @Test
@@ -94,8 +99,8 @@ public class TableRowElementTest {
         when(webElement.findElements(By.tagName(AbstractTableElement.TABLE_COLUMN_TAG)))
                 .thenReturn(Arrays.asList(columnOne, columnTwo));
 
-        TableRowElement<TableColumnElement> tableRow = new TableRowElement<>(webElement, table);
-        boolean contains = tableRow.contains(row -> row.webElement() == columnTwo);
+        TableRowElement<TableColumnElement> tableRow = new TableRowElement<>(webElementWrapper, table);
+        boolean contains = tableRow.contains(row -> row.webElement().webElement() == columnTwo);
 
         assertThat(contains).isTrue();
     }
@@ -108,7 +113,7 @@ public class TableRowElementTest {
         when(webElement.findElements(By.tagName(AbstractTableElement.TABLE_COLUMN_TAG)))
                 .thenReturn(Arrays.asList(columnOne, columnTwo));
 
-        TableRowElement<TableColumnElement> tableRow = new TableRowElement<>(webElement, table);
+        TableRowElement<TableColumnElement> tableRow = new TableRowElement<>(webElementWrapper, table);
         boolean contains = tableRow.contains(row -> false);
 
         assertThat(contains).isFalse();
@@ -122,10 +127,10 @@ public class TableRowElementTest {
         when(webElement.findElements(By.tagName(AbstractTableElement.TABLE_COLUMN_TAG)))
                 .thenReturn(Arrays.asList(columnOne, columnTwo));
 
-        TableRowElement<TableColumnElement> tableRow = new TableRowElement<>(webElement, table);
-        TableColumnElement tableColumn = tableRow.find(column -> column.webElement() == columnTwo);
+        TableRowElement<TableColumnElement> tableRow = new TableRowElement<>(webElementWrapper, table);
+        TableColumnElement tableColumn = tableRow.find(column -> column.webElement().webElement() == columnTwo);
 
-        assertThat(tableColumn.webElement()).isSameAs(columnTwo);
+        assertThat(tableColumn.webElement().webElement()).isSameAs(columnTwo);
     }
 
     @Test
@@ -136,7 +141,7 @@ public class TableRowElementTest {
         when(webElement.findElements(By.tagName(AbstractTableElement.TABLE_COLUMN_TAG)))
                 .thenReturn(Arrays.asList(columnOne, columnTwo));
 
-        TableRowElement<TableColumnElement> tableRow = new TableRowElement<>(webElement, table);
+        TableRowElement<TableColumnElement> tableRow = new TableRowElement<>(webElementWrapper, table);
         TableColumnElement tableColumn = tableRow.find(column -> false);
 
         assertThat(tableColumn).isNull();
@@ -150,11 +155,11 @@ public class TableRowElementTest {
         when(webElement.findElements(By.tagName(AbstractTableElement.TABLE_COLUMN_TAG)))
                 .thenReturn(Arrays.asList(columnOne, columnTwo));
 
-        TableRowElement<TableColumnElement> tableRow = new TableRowElement<>(webElement, table);
-        List<TableColumnElement> tableColumns = tableRow.findAll(column -> column.webElement() == columnTwo);
+        TableRowElement<TableColumnElement> tableRow = new TableRowElement<>(webElementWrapper, table);
+        List<TableColumnElement> tableColumns = tableRow.findAll(column -> column.webElement().webElement() == columnTwo);
 
         assertThat(tableColumns).hasSize(1);
-        assertThat(tableColumns.get(0).webElement()).isSameAs(columnTwo);
+        assertThat(tableColumns.get(0).webElement().webElement()).isSameAs(columnTwo);
     }
 
 }

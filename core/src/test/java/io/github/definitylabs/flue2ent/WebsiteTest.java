@@ -122,13 +122,28 @@ public class WebsiteTest {
 
     @Test
     public void at_setsDriverAndReturnsParameter() {
-        WebContentDsl webContentDsl = mock(WebContentDsl.class);
+        WebContentDsl<WebContentDsl> webContentDsl = mock(WebContentDsl.class);
+        when(webContentDsl.getResponse()).thenReturn(webContentDsl);
 
         Website website = Website.with(driver).visit(TEST_WEBSITE_URL);
         WebContentDsl at = website.at(webContentDsl);
 
         verify(webContentDsl).setWebsite(website);
         assertThat(at).isSameAs(webContentDsl);
+    }
+
+    @Test
+    public void at_setsDriverAndResponseParameter() {
+        WebElementWrapper webElementWrapper = mock(WebElementWrapper.class);
+
+        WebContentDsl<WebElementWrapper> webContentDsl = mock(WebContentDsl.class);
+        when(webContentDsl.getResponse()).thenReturn(webElementWrapper);
+
+        Website website = Website.with(driver).visit(TEST_WEBSITE_URL);
+        WebElementWrapper at = website.at(webContentDsl);
+
+        verify(webContentDsl).setWebsite(website);
+        assertThat(at).isSameAs(webElementWrapper);
     }
 
 }

@@ -54,9 +54,9 @@ public class Website {
                 .collect(Collectors.toList());
     }
 
-    public <T extends WebContentDsl> T at(T content) {
+    public <R, T extends WebContentDsl<R>> R at(T content) {
         content.setWebsite(this);
-        return content;
+        return content.getResponse();
     }
 
     public static final class WebsiteBuilder {
