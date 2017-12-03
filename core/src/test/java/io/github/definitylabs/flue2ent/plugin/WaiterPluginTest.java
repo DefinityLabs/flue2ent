@@ -1,5 +1,7 @@
-package io.github.definitylabs.flue2ent;
+package io.github.definitylabs.flue2ent.plugin;
 
+import io.github.definitylabs.flue2ent.Website;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -19,7 +21,7 @@ import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class WebsiteWaiterTest {
+public class WaiterPluginTest {
 
     @Mock
     private Website website;
@@ -27,50 +29,55 @@ public class WebsiteWaiterTest {
     @Mock
     private FluentWait<WebDriver> wait;
 
+    @Before
+    public void beforeEach() throws Exception {
+        when(website.createFluentWait()).thenReturn(wait);
+    }
+
     @Test
     public void upTo_callsWaitWithTimeout() {
-        WebsiteWaiter waiter = new WebsiteWaiter(website, wait);
+        WaiterPlugin waiter = new WaiterPlugin(website);
 
-        WebsiteWaiter websiteWaiter = waiter.upTo(10, TimeUnit.SECONDS);
+        WaiterPlugin waiterPlugin = waiter.upTo(10, TimeUnit.SECONDS);
 
         verify(wait).withTimeout(10, TimeUnit.SECONDS);
-        assertThat(websiteWaiter).isSameAs(waiter);
+        assertThat(waiterPlugin).isSameAs(waiter);
     }
 
     @Test
     public void pollingEvery_callsWaitPullingEvery() {
-        WebsiteWaiter waiter = new WebsiteWaiter(website, wait);
+        WaiterPlugin waiter = new WaiterPlugin(website);
 
-        WebsiteWaiter websiteWaiter = waiter.pollingEvery(2, TimeUnit.SECONDS);
+        WaiterPlugin waiterPlugin = waiter.pollingEvery(2, TimeUnit.SECONDS);
 
         verify(wait).pollingEvery(2, TimeUnit.SECONDS);
-        assertThat(websiteWaiter).isSameAs(waiter);
+        assertThat(waiterPlugin).isSameAs(waiter);
     }
 
     @Test
     public void withMessage_callsWaitWithMessage() {
-        WebsiteWaiter waiter = new WebsiteWaiter(website, wait);
+        WaiterPlugin waiter = new WaiterPlugin(website);
 
         String message = "I can't wait";
-        WebsiteWaiter websiteWaiter = waiter.withMessage(message);
+        WaiterPlugin waiterPlugin = waiter.withMessage(message);
 
         verify(wait).withMessage(message);
-        assertThat(websiteWaiter).isSameAs(waiter);
+        assertThat(waiterPlugin).isSameAs(waiter);
     }
 
     @Test
     public void ignoring_callsWaitIgnoring() {
-        WebsiteWaiter waiter = new WebsiteWaiter(website, wait);
+        WaiterPlugin waiter = new WaiterPlugin(website);
 
-        WebsiteWaiter websiteWaiter = waiter.ignoring(IllegalArgumentException.class, NullPointerException.class);
+        WaiterPlugin waiterPlugin = waiter.ignoring(IllegalArgumentException.class, NullPointerException.class);
 
         verify(wait).ignoreAll(Arrays.asList(IllegalArgumentException.class, NullPointerException.class));
-        assertThat(websiteWaiter).isSameAs(waiter);
+        assertThat(waiterPlugin).isSameAs(waiter);
     }
 
     @Test
     public void until_callsWaitUntil() {
-        WebsiteWaiter waiter = new WebsiteWaiter(website, wait);
+        WaiterPlugin waiter = new WaiterPlugin(website);
 
         when(wait.until(any())).thenAnswer(invocationOnMock -> {
             Function<WebDriver, WebElement> function = invocationOnMock.getArgumentAt(0, Function.class);
@@ -90,7 +97,7 @@ public class WebsiteWaiterTest {
 
     @Test
     public void supplier_until_callsWaitUntil() {
-        WebsiteWaiter waiter = new WebsiteWaiter(website, wait);
+        WaiterPlugin waiter = new WaiterPlugin(website);
 
         when(wait.until(any())).thenAnswer(invocationOnMock -> {
             Function<WebDriver, WebElement> function = invocationOnMock.getArgumentAt(0, Function.class);
@@ -110,7 +117,7 @@ public class WebsiteWaiterTest {
 
     @Test
     public void driver_until_callsWaitUntil() {
-        WebsiteWaiter waiter = new WebsiteWaiter(website, wait);
+        WaiterPlugin waiter = new WaiterPlugin(website);
 
         WebElement mockedElement = mock(WebElement.class);
         when(wait.until(any())).thenReturn(mockedElement);

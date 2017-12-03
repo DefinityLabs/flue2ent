@@ -1,5 +1,6 @@
-package io.github.definitylabs.flue2ent;
+package io.github.definitylabs.flue2ent.plugin;
 
+import io.github.definitylabs.flue2ent.Website;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.FluentWait;
 
@@ -8,33 +9,33 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class WebsiteWaiter {
+public class WaiterPlugin implements WebsitePlugin {
 
     protected final Website website;
     protected final FluentWait<WebDriver> wait;
 
-    protected WebsiteWaiter(Website website, FluentWait<WebDriver> wait) {
+    public WaiterPlugin(Website website) {
         this.website = website;
-        this.wait = wait;
+        this.wait = website.createFluentWait();
     }
 
-    public final WebsiteWaiter upTo(int duration, TimeUnit unit) {
+    public final WaiterPlugin upTo(int duration, TimeUnit unit) {
         wait.withTimeout(duration, unit);
         return this;
     }
 
-    public final WebsiteWaiter pollingEvery(int duration, TimeUnit unit) {
+    public final WaiterPlugin pollingEvery(int duration, TimeUnit unit) {
         wait.pollingEvery(duration, unit);
         return this;
     }
 
-    public final WebsiteWaiter withMessage(String message) {
+    public final WaiterPlugin withMessage(String message) {
         wait.withMessage(message);
         return this;
     }
 
     @SafeVarargs
-    public final WebsiteWaiter ignoring(Class<? extends Throwable>... exceptionType) {
+    public final WaiterPlugin ignoring(Class<? extends Throwable>... exceptionType) {
         wait.ignoreAll(Arrays.asList(exceptionType));
         return this;
     }

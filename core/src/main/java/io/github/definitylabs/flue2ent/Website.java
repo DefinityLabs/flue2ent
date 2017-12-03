@@ -2,21 +2,16 @@ package io.github.definitylabs.flue2ent;
 
 import io.github.definitylabs.flue2ent.dsl.WebContentDsl;
 import io.github.definitylabs.flue2ent.element.WebElementWrapper;
-import org.apache.commons.io.FileUtils;
-import org.openqa.selenium.*;
+import io.github.definitylabs.flue2ent.plugin.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.FluentWait;
 
-import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class Website {
-
-    private static final SimpleDateFormat timestampFormat = new SimpleDateFormat("yyyyMMddHHmmssSSS");
 
     private final WebDriver driver;
     private final String url;
@@ -35,20 +30,12 @@ public class Website {
         return driver;
     }
 
+    public FluentWait<WebDriver> createFluentWait() {
+        return new FluentWait<>(driver);
+    }
+
     public String getUrl() {
         return url;
-    }
-
-    public String getCurrentUrl() {
-        return driver.getCurrentUrl();
-    }
-
-    public String getTitle() {
-        return driver.getTitle();
-    }
-
-    public WebsiteWaiter justWait() {
-        return new WebsiteWaiter(this, new FluentWait<>(driver));
     }
 
     public WebElementWrapper findElement(By by) {
@@ -71,16 +58,33 @@ public class Website {
         return this;
     }
 
-    public Screenshot screenshot() {
-        return new Screenshot((TakesScreenshot) driver);
+    @SuppressWarnings("unchecked")
+    public <D, T extends WebDriverPlugin> T driverPlugin(Function<D, T> plugin) {
+        return plugin.apply((D) driver);
     }
 
-    public Scroll scroll() {
-        return new Scroll((JavascriptExecutor) driver);
+    public <T extends WebsitePlugin> T plugin(Function<Website, T> plugin) {
+        return plugin.apply(this);
     }
 
-    public JavaScript javaScript() {
-        return new JavaScript((JavascriptExecutor) driver);
+    public WaiterPlugin justWait() {
+        return plugin(WaiterPlugin::new);
+    }
+
+    public PagePlugin page() {
+        return driverPlugin(PagePlugin::new);
+    }
+
+    public ScreenshotPlugin screenshot() {
+        return driverPlugin(ScreenshotPlugin::new);
+    }
+
+    public ScrollPlugin scroll() {
+        return driverPlugin(ScrollPlugin::new);
+    }
+
+    public JavaScriptPlugin javaScript() {
+        return driverPlugin(JavaScriptPlugin::new);
     }
 
     public static final class WebsiteBuilder {
@@ -93,99 +97,6 @@ public class Website {
 
         public Website visit(String url) {
             return new Website(driver, url);
-        }
-
-    }
-
-    public final class Screenshot {
-
-        private static final String SCREENSHOT_DIRECTORY_NAME = "screenshot";
-        private final TakesScreenshot driver;
-
-        private Screenshot(TakesScreenshot driver) {
-            this.driver = driver;
-        }
-
-        public void takeAsBytes(Consumer<byte[]> consumer) {
-            byte[] screenshotAsBytes = driver.getScreenshotAs(OutputType.BYTES);
-            consumer.accept(screenshotAsBytes);
-        }
-
-        public void takeAsFile(Consumer<File> consumer) {
-            File screenshotAsFile = driver.getScreenshotAs(OutputType.FILE);
-            consumer.accept(screenshotAsFile);
-        }
-
-        public void take() {
-            takeAsFile(file -> {
-                File screenshotDirectory = new File(SCREENSHOT_DIRECTORY_NAME);
-                String fileName = "screenshot_" + timestampFormat.format(new Date()) + ".png";
-                File screenshotFile = new File(screenshotDirectory, fileName);
-
-                try {
-                    FileUtils.forceMkdir(screenshotDirectory);
-                    FileUtils.copyFile(file, screenshotFile);
-                } catch (IOException e) {
-                    throw new RuntimeException("Cannot save screenshot file", e);
-                }
-            });
-        }
-
-    }
-
-    public final class Scroll {
-
-        private final JavascriptExecutor driver;
-
-        private Scroll(JavascriptExecutor driver) {
-            this.driver = driver;
-        }
-
-        public Scroll top() {
-            return to(0, 0);
-        }
-
-        public Scroll up() {
-            return by(0, -250);
-        }
-
-        public Scroll down() {
-            return by(0, 250);
-        }
-
-        public Scroll bottom() {
-            driver.executeScript("window.scrollTo(0, document.body.scrollHeight);");
-            return this;
-        }
-
-        public Scroll to(int x, int y) {
-            driver.executeScript("window.scrollTo(" + x + ", " + y + ");");
-            return this;
-        }
-
-        public Scroll by(int x, int y) {
-            driver.executeScript("window.scrollBy(" + x + ", " + y + ");");
-            return this;
-        }
-
-    }
-
-    public final class JavaScript {
-
-        private final JavascriptExecutor driver;
-
-        private JavaScript(JavascriptExecutor driver) {
-            this.driver = driver;
-        }
-
-        @SuppressWarnings("unchecked")
-        public <T> T execute(String script, Object... args) {
-            return (T) driver.executeScript(script, args);
-        }
-
-        @SuppressWarnings("unchecked")
-        public <T> T executeAsync(String script, Object... args) {
-            return (T) driver.executeAsyncScript(script, args);
         }
 
     }
