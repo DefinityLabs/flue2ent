@@ -43,6 +43,10 @@ public class WebElementWrapper {
         return this;
     }
 
+    public String getAttribute(String name) {
+        return webElement.getAttribute(name);
+    }
+
     public final boolean isEnabled() {
         return webElement.isEnabled();
     }

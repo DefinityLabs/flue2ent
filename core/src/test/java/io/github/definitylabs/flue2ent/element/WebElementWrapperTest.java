@@ -65,6 +65,20 @@ public class WebElementWrapperTest {
     }
 
     @Test
+    public void getAttribute_callsGetAttribute() {
+        WebElementWrapper wrapper = new WebElementWrapper(webElement);
+
+        String name = "name";
+        String value = "value";
+        when(webElement.getAttribute(name)).thenReturn(value);
+
+        String result = wrapper.getAttribute(name);
+        verify(webElement).getAttribute(name);
+
+        assertThat(result).isEqualTo(value);
+    }
+
+    @Test
     public void submit_callsWebElementSubmit() {
         WebElementWrapper wrapper = new WebElementWrapper(webElement);
 
