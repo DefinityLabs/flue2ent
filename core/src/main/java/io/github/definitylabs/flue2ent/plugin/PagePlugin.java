@@ -5,7 +5,7 @@ import org.openqa.selenium.WebDriver;
 
 public class PagePlugin implements WebDriverPlugin {
 
-    protected WebDriver driver;
+    protected final WebDriver driver;
 
     public PagePlugin(WebDriver driver) {
         this.driver = driver;

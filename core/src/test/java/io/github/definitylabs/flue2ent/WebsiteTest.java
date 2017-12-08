@@ -144,6 +144,16 @@ public class WebsiteTest {
     }
 
     @Test
+    public void alert_returnsAlertPlugin() {
+        RemoteWebDriver mockedWebDriver = mock(RemoteWebDriver.class);
+        Website website = Website.with(mockedWebDriver).visit(TEST_WEBSITE_URL);
+
+        AlertPlugin alertPlugin = website.alert();
+
+        assertThat(alertPlugin).isNotNull();
+    }
+
+    @Test
     public void screenshot_returnsScreenshotPlugin() {
         RemoteWebDriver mockedWebDriver = mock(RemoteWebDriver.class);
         Website website = Website.with(mockedWebDriver).visit(TEST_WEBSITE_URL);

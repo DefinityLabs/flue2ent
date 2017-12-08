@@ -75,6 +75,10 @@ public class Website {
         return driverPlugin(PagePlugin::new);
     }
 
+    public AlertPlugin alert() {
+        return driverPlugin(AlertPlugin::new);
+    }
+
     public ScreenshotPlugin screenshot() {
         return driverPlugin(ScreenshotPlugin::new);
     }
