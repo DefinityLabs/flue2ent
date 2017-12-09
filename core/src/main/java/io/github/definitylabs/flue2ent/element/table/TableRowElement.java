@@ -17,14 +17,14 @@ public class TableRowElement<C extends TableColumnElement> extends WebElementDec
         this.table = table;
     }
 
-    public List<C> headers() {
+    public final List<C> headers() {
         By byTableHeader = table.tableElementConfiguration.getHeaderDefinition();
         return webElement.findElements(byTableHeader).stream()
                 .map(table::createColumn)
                 .collect(Collectors.toList());
     }
 
-    public List<C> columns() {
+    public final List<C> columns() {
         By byTableColumn = table.tableElementConfiguration.getColumnDefinition();
         return webElement.findElements(byTableColumn).stream()
                 .map(table::createColumn)

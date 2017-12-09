@@ -38,7 +38,7 @@ public abstract class AbstractTableElement<R extends TableRowElement<C>, C exten
 
     protected abstract C createColumn(WebElementWrapper webElement);
 
-    public List<R> rows() {
+    public final List<R> rows() {
         By byTableRow = tableElementConfiguration.getRowDefinition();
         return webElement.findElements(byTableRow).stream()
                 .map(this::createRow)
