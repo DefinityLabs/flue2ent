@@ -29,7 +29,7 @@ public class AbstractListElementTest {
     @Before
     public void beforeEach() {
         byItem = By.tagName("li");
-        list = new AbstractListElement<ListItemElement>(webElement, byItem) {
+        list = new AbstractListElement<ListItemElement>(new WebElementWrapper(webElement), byItem) {
             @Override
             protected ListItemElement createListItem(WebElementWrapper webElementWrapper) {
                 return new ListItemElement(this, webElementWrapper);

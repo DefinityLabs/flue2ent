@@ -1,6 +1,7 @@
 package io.github.definitylabs.flue2ent.element.list;
 
 import io.github.definitylabs.flue2ent.element.SeleniumElementCreator;
+import io.github.definitylabs.flue2ent.element.WebElementWrapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,7 +36,7 @@ public class SelectElementTest {
 
     @Test
     public void isMultiple_callsIsMultiple() {
-        SelectElement selectElement = new SelectElement(webElement);
+        SelectElement selectElement = new SelectElement(new WebElementWrapper(webElement));
         when(select.isMultiple()).thenReturn(true);
 
         boolean multiple = selectElement.isMultiple();
@@ -57,7 +58,7 @@ public class SelectElementTest {
 
         when(webElement.findElements(By.tagName("option"))).thenReturn(Arrays.asList(optionOne, optionTwo, optionThree));
 
-        SelectElement selectElement = new SelectElement(webElement);
+        SelectElement selectElement = new SelectElement(new WebElementWrapper(webElement));
         List<SelectOptionElement> optionElements = selectElement.selectedItems();
 
         assertThat(optionElements).hasSize(2);
@@ -73,7 +74,7 @@ public class SelectElementTest {
 
         when(webElement.findElements(By.tagName("option"))).thenReturn(Arrays.asList(optionOne, optionTwo));
 
-        SelectElement selectElement = new SelectElement(webElement);
+        SelectElement selectElement = new SelectElement(new WebElementWrapper(webElement));
         SelectOptionElement optionElement = selectElement.selectedItem();
 
         assertThat(optionElement.webElement().webElement()).isSameAs(optionOne);
@@ -83,7 +84,7 @@ public class SelectElementTest {
     public void selectByVisibleText_callsSelectByVisibleText() {
         String text = "text";
 
-        SelectElement selectElement = new SelectElement(webElement);
+        SelectElement selectElement = new SelectElement(new WebElementWrapper(webElement));
         SelectElement result = selectElement.selectByVisibleText(text);
 
         verify(select).selectByVisibleText(text);
@@ -94,7 +95,7 @@ public class SelectElementTest {
     public void selectByIndex_callsSelectByIndex() {
         int index = 1;
 
-        SelectElement selectElement = new SelectElement(webElement);
+        SelectElement selectElement = new SelectElement(new WebElementWrapper(webElement));
         SelectElement result = selectElement.selectByIndex(index);
 
         verify(select).selectByIndex(index);
@@ -105,7 +106,7 @@ public class SelectElementTest {
     public void selectByValue_callsSelectByValue() {
         String value = "value";
 
-        SelectElement selectElement = new SelectElement(webElement);
+        SelectElement selectElement = new SelectElement(new WebElementWrapper(webElement));
         SelectElement result = selectElement.selectByValue(value);
 
         verify(select).selectByValue(value);
@@ -114,7 +115,7 @@ public class SelectElementTest {
 
     @Test
     public void deselectAll_callsDeselectAll() {
-        SelectElement selectElement = new SelectElement(webElement);
+        SelectElement selectElement = new SelectElement(new WebElementWrapper(webElement));
         SelectElement result = selectElement.deselectAll();
 
         verify(select).deselectAll();
@@ -125,7 +126,7 @@ public class SelectElementTest {
     public void deselectByValue_callsDeselectByValue() {
         String value = "value";
 
-        SelectElement selectElement = new SelectElement(webElement);
+        SelectElement selectElement = new SelectElement(new WebElementWrapper(webElement));
         SelectElement result = selectElement.deselectByValue(value);
 
         verify(select).deselectByValue(value);
@@ -136,7 +137,7 @@ public class SelectElementTest {
     public void deselectByIndex_callsDeselectByIndex() {
         int index = 1;
 
-        SelectElement selectElement = new SelectElement(webElement);
+        SelectElement selectElement = new SelectElement(new WebElementWrapper(webElement));
         SelectElement result = selectElement.deselectByIndex(index);
 
         verify(select).deselectByIndex(index);
@@ -147,7 +148,7 @@ public class SelectElementTest {
     public void deselectByVisibleText_callsDeselectByVisibleText() {
         String text = "text";
 
-        SelectElement selectElement = new SelectElement(webElement);
+        SelectElement selectElement = new SelectElement(new WebElementWrapper(webElement));
         SelectElement result = selectElement.deselectByVisibleText(text);
 
         verify(select).deselectByVisibleText(text);

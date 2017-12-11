@@ -1,25 +1,25 @@
 package io.github.definitylabs.flue2ent.element.list;
 
+import io.github.definitylabs.flue2ent.element.WebElementDecorator;
 import io.github.definitylabs.flue2ent.element.WebElementWrapper;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-public abstract class AbstractListElement<T extends ListItemElement> extends WebElementWrapper {
+public abstract class AbstractListElement<T extends ListItemElement> extends WebElementDecorator {
 
     protected final By byItem;
 
-    protected AbstractListElement(WebElement webElement, By byItem) {
+    protected AbstractListElement(WebElementWrapper webElement, By byItem) {
         super(webElement);
         this.byItem = byItem;
     }
 
     public final List<T> items() {
-        return findElements(byItem).stream()
+        return webElement().findElements(byItem).stream()
                 .map(this::createListItem)
                 .collect(Collectors.toList());
     }

@@ -3,7 +3,6 @@ package io.github.definitylabs.flue2ent.element.list;
 import io.github.definitylabs.flue2ent.element.SeleniumElementCreator;
 import io.github.definitylabs.flue2ent.element.WebElementWrapper;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
 import java.util.List;
@@ -12,9 +11,9 @@ public class SelectElement extends AbstractListElement<SelectOptionElement> {
 
     private final Select select;
 
-    public SelectElement(WebElement webElement) {
+    public SelectElement(WebElementWrapper webElement) {
         super(webElement, By.tagName("option"));
-        this.select = SeleniumElementCreator.createSelect(webElement);
+        this.select = SeleniumElementCreator.createSelect(webElement.webElement());
     }
 
     public boolean isMultiple() {

@@ -19,14 +19,14 @@ public class ListElementTest {
 
     @Test
     public void new_returnsListElement() {
-        ListElement listElement = new ListElement(webElement);
+        ListElement listElement = new ListElement(new WebElementWrapper(webElement));
 
         assertThat(listElement.byItem).isEqualTo(By.tagName("li"));
     }
 
     @Test
     public void createListItem_returnsNewListItemElement() {
-        ListElement listElement = new ListElement(webElement);
+        ListElement listElement = new ListElement(new WebElementWrapper(webElement));
 
         WebElement webElementItem = mock(WebElement.class);
         WebElementWrapper webElementWrapper = new WebElementWrapper(webElementItem);

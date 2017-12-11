@@ -2,11 +2,10 @@ package io.github.definitylabs.flue2ent.element.list;
 
 import io.github.definitylabs.flue2ent.element.WebElementWrapper;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 
 public class ListElement extends AbstractListElement<ListItemElement> {
 
-    public ListElement(WebElement webElement) {
+    public ListElement(WebElementWrapper webElement) {
         super(webElement, By.tagName("li"));
     }
 
