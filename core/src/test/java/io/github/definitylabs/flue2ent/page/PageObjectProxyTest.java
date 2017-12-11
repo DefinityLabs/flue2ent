@@ -281,6 +281,33 @@ public class PageObjectProxyTest {
         assertThat(links.get(1)).isEqualTo("Link Two");
     }
 
+    @Test
+    public void args_elementByClassNameAndIndex_returnsWebElement() {
+        WebElement sessionOneElement = mock(WebElement.class);
+        WebElement sessionTwoElement = mock(WebElement.class);
+
+        when(website.findElement(By.cssSelector(".session:nth-child(1)"))).thenReturn(new WebElementWrapper(sessionOneElement));
+        when(website.findElement(By.cssSelector(".session:nth-child(2)"))).thenReturn(new WebElementWrapper(sessionTwoElement));
+
+        MyPage myPage = PageObjectProxy.newInstance(MyPage.class, website);
+
+        WebElementWrapper sessionOne = myPage.elementByClassNameAndIndex("session", 1);
+        WebElementWrapper sessionTwo = myPage.elementByClassNameAndIndex("session", 2);
+
+        assertThat(sessionOne.webElement()).isSameAs(sessionOneElement);
+        assertThat(sessionTwo.webElement()).isSameAs(sessionTwoElement);
+    }
+
+    @Test
+    public void args_elementByClassName_throwsException() {
+        MyPage myPage = PageObjectProxy.newInstance(MyPage.class, website);
+
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("All parameters should be annotated with @Param");
+
+        myPage.elementByClassName("session");
+    }
+
     interface MyPage {
 
         @FindElementBy(id = "name")
@@ -330,6 +357,12 @@ public class PageObjectProxyTest {
 
         @FindElementBy(value = "MALE")
         WebElementWrapper genderMale();
+
+        @FindElementBy(css = ".{className}:nth-child({index})")
+        WebElementWrapper elementByClassNameAndIndex(@Param("className") String className, @Param("index") int index);
+
+        @FindElementBy(css = ".{className}")
+        WebElementWrapper elementByClassName(String className);
 
         @PageObject
         SubPage subPage();

@@ -34,12 +34,12 @@ public class PageObjectProxy implements InvocationHandler {
                 Type type = ((ParameterizedType) genericReturnType).getActualTypeArguments()[0];
                 Class<?> listItemReturnType = (Class<?>) type;
 
-                List<WebElementWrapper> elements = website.findElements(by(annotation));
+                List<WebElementWrapper> elements = website.findElements(by(annotation, method.getParameters(), args));
                 return elements.stream()
                         .map(element -> convertTo(element, annotation.andGetAttribute(), listItemReturnType))
                         .collect(Collectors.toList());
             } else {
-                WebElementWrapper element = website.findElement(by(annotation));
+                WebElementWrapper element = website.findElement(by(annotation, method.getParameters(), args));
                 return convertTo(element, annotation.andGetAttribute(), returnType);
             }
         } else if (method.isAnnotationPresent(PageObject.class)) {
@@ -71,35 +71,49 @@ public class PageObjectProxy implements InvocationHandler {
         return element;
     }
 
-    private By by(FindElementBy annotation) {
+    private By by(FindElementBy annotation, Parameter[] parameters, Object[] args) {
         if (!annotation.id().isEmpty()) {
-            return By.id(annotation.id());
+            return By.id(replaceParameters(annotation.id(), parameters, args));
         } else if (!annotation.className().isEmpty()) {
-            return By.className(annotation.className());
+            return By.className(replaceParameters(annotation.className(), parameters, args));
         } else if (!annotation.tagName().isEmpty()) {
-            return By.tagName(annotation.tagName());
+            return By.tagName(replaceParameters(annotation.tagName(), parameters, args));
         } else if (!annotation.css().isEmpty()) {
-            return By.cssSelector(annotation.css());
+            return By.cssSelector(replaceParameters(annotation.css(), parameters, args));
         } else if (!annotation.xpath().isEmpty()) {
-            return By.xpath(annotation.xpath());
+            return By.xpath(replaceParameters(annotation.xpath(), parameters, args));
         } else if (!annotation.name().isEmpty()) {
-            return By.name(annotation.name());
+            return By.name(replaceParameters(annotation.name(), parameters, args));
         } else if (!annotation.linkText().isEmpty()) {
-            return By.linkText(annotation.linkText());
+            return By.linkText(replaceParameters(annotation.linkText(), parameters, args));
         } else if (!annotation.partialLinkText().isEmpty()) {
-            return By.partialLinkText(annotation.partialLinkText());
+            return By.partialLinkText(replaceParameters(annotation.partialLinkText(), parameters, args));
         } else if (!annotation.label().isEmpty()) {
-            return ExtendedBy.byLabel(annotation.label());
+            return ExtendedBy.byLabel(replaceParameters(annotation.label(), parameters, args));
         } else if (!annotation.labelContaining().isEmpty()) {
-            return ExtendedBy.byLabelContaining(annotation.labelContaining());
+            return ExtendedBy.byLabelContaining(replaceParameters(annotation.labelContaining(), parameters, args));
         } else if (!annotation.placeholder().isEmpty()) {
-            return ExtendedBy.byPlaceholder(annotation.placeholder());
+            return ExtendedBy.byPlaceholder(replaceParameters(annotation.placeholder(), parameters, args));
         } else if (!annotation.value().isEmpty()) {
-            return ExtendedBy.byValue(annotation.value());
+            return ExtendedBy.byValue(replaceParameters(annotation.value(), parameters, args));
         } else if (!annotation.button().isEmpty()) {
-            return ExtendedBy.byButton(annotation.button());
+            return ExtendedBy.byButton(replaceParameters(annotation.button(), parameters, args));
         }
         throw new IllegalArgumentException("element path is not defined");
+    }
+
+    private String replaceParameters(String expression, Parameter[] parameters, Object[] args) {
+        String newExpression = expression;
+        for (int i = 0; i < parameters.length; i++) {
+            Parameter parameter = parameters[i];
+            if (!parameter.isAnnotationPresent(Param.class)) {
+                throw new IllegalArgumentException("All parameters should be annotated with @Param");
+            }
+
+            String parameterName = parameter.getAnnotation(Param.class).value();
+            newExpression = newExpression.replace("{" + parameterName + "}", String.valueOf(args[i]));
+        }
+        return newExpression;
     }
 
 }
