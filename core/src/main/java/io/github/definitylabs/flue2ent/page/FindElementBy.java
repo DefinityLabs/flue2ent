@@ -1,4 +1,4 @@
-package io.github.definitylabs.flue2ent.element.proxy;
+package io.github.definitylabs.flue2ent.page;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

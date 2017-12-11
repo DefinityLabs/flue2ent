@@ -2,7 +2,7 @@ package io.github.definitylabs.flue2ent;
 
 import io.github.definitylabs.flue2ent.dsl.WebContentDsl;
 import io.github.definitylabs.flue2ent.element.WebElementWrapper;
-import io.github.definitylabs.flue2ent.element.proxy.WebElementProxy;
+import io.github.definitylabs.flue2ent.page.PageObjectProxy;
 import io.github.definitylabs.flue2ent.plugin.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -55,7 +55,7 @@ public class Website {
     }
 
     public <T> T at(Class<T> type) {
-        return WebElementProxy.newInstance(type, this);
+        return PageObjectProxy.newInstance(type, this);
     }
 
     public Website refresh() {

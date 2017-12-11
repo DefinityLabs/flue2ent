@@ -1,4 +1,4 @@
-package io.github.definitylabs.flue2ent.element.proxy;
+package io.github.definitylabs.flue2ent.page;
 
 import io.github.definitylabs.flue2ent.Website;
 import io.github.definitylabs.flue2ent.element.ExtendedBy;
@@ -6,32 +6,44 @@ import io.github.definitylabs.flue2ent.element.WebElementDecorator;
 import io.github.definitylabs.flue2ent.element.WebElementWrapper;
 import org.openqa.selenium.By;
 
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
+import java.lang.reflect.*;
+import java.util.List;
+import java.util.stream.Collectors;
 
-public class WebElementProxy implements InvocationHandler {
+public class PageObjectProxy implements InvocationHandler {
 
     private final Website website;
 
-    private WebElementProxy(Website website) {
+    private PageObjectProxy(Website website) {
         this.website = website;
     }
 
     @SuppressWarnings("unchecked")
     public static <T> T newInstance(Class<T> type, Website website) {
-        return (T) Proxy.newProxyInstance(type.getClassLoader(), new Class[]{type}, new WebElementProxy(website));
+        return (T) Proxy.newProxyInstance(type.getClassLoader(), new Class[]{type}, new PageObjectProxy(website));
     }
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         if (method.isAnnotationPresent(FindElementBy.class)) {
             FindElementBy annotation = method.getAnnotation(FindElementBy.class);
-            WebElementWrapper element = website.findElement(by(annotation));
+
             Class<?> returnType = method.getReturnType();
-            return convertTo(element, annotation.andGetAttribute(), returnType);
-        } else if (method.isAnnotationPresent(WebProxy.class)) {
-            return WebElementProxy.newInstance(method.getReturnType(), website);
+            if (returnType.equals(List.class)) {
+                Type genericReturnType = method.getGenericReturnType();
+                Type type = ((ParameterizedType) genericReturnType).getActualTypeArguments()[0];
+                Class<?> listItemReturnType = (Class<?>) type;
+
+                List<WebElementWrapper> elements = website.findElements(by(annotation));
+                return elements.stream()
+                        .map(element -> convertTo(element, annotation.andGetAttribute(), listItemReturnType))
+                        .collect(Collectors.toList());
+            } else {
+                WebElementWrapper element = website.findElement(by(annotation));
+                return convertTo(element, annotation.andGetAttribute(), returnType);
+            }
+        } else if (method.isAnnotationPresent(PageObject.class)) {
+            return PageObjectProxy.newInstance(method.getReturnType(), website);
         } else {
             throw new RuntimeException("Method not implemented");
         }
