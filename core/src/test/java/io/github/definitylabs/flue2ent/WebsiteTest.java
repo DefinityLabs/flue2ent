@@ -2,6 +2,7 @@ package io.github.definitylabs.flue2ent;
 
 import io.github.definitylabs.flue2ent.dsl.WebContentDsl;
 import io.github.definitylabs.flue2ent.element.WebElementWrapper;
+import io.github.definitylabs.flue2ent.element.proxy.FindElementBy;
 import io.github.definitylabs.flue2ent.plugin.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -119,6 +120,18 @@ public class WebsiteTest {
     }
 
     @Test
+    public void at_whenWebProxy_returnsWebElementProxy() {
+        WebElement titleElement = mock(WebElement.class);
+        when(driver.findElement(By.id("title"))).thenReturn(titleElement);
+        when(titleElement.getText()).thenReturn("Title");
+
+        Website website = Website.with(driver).visit(TEST_WEBSITE_URL);
+        WebPage webPage = website.at(WebPage.class);
+
+        assertThat(webPage.getTitle()).isEqualTo("Title");
+    }
+
+    @Test
     public void at_setsDriverAndResponseParameter() {
         WebElementWrapper webElementWrapper = mock(WebElementWrapper.class);
 
@@ -191,6 +204,11 @@ public class WebsiteTest {
         PagePlugin pagePlugin = website.page();
 
         assertThat(pagePlugin).isNotNull();
+    }
+
+    interface WebPage {
+        @FindElementBy(id = "title")
+        String getTitle();
     }
 
 }
