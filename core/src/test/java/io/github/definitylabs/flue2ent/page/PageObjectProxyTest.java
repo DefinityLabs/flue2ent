@@ -2,8 +2,8 @@ package io.github.definitylabs.flue2ent.page;
 
 import io.github.definitylabs.flue2ent.Website;
 import io.github.definitylabs.flue2ent.element.ExtendedBy;
+import io.github.definitylabs.flue2ent.element.FindElementBy;
 import io.github.definitylabs.flue2ent.element.SeleniumElementCreator;
-import io.github.definitylabs.flue2ent.element.WebElementDecorator;
 import io.github.definitylabs.flue2ent.element.WebElementWrapper;
 import io.github.definitylabs.flue2ent.element.list.SelectElement;
 import io.github.definitylabs.flue2ent.element.table.TableElement;
@@ -21,7 +21,6 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -219,6 +218,17 @@ public class PageObjectProxyTest {
     }
 
     @Test
+    public void findByValue_male_returnsWebElement() {
+        when(website.findElement(ExtendedBy.byValue("MALE"))).thenReturn(new WebElementWrapper(webElement));
+
+        MyPage myPage = PageObjectProxy.newInstance(MyPage.class, website);
+
+        WebElementWrapper genderMale = myPage.male();
+
+        assertThat(genderMale.webElement()).isSameAs(webElement);
+    }
+
+    @Test
     public void webProxy_subPage_returnsWebElement() {
         WebElement h1Element = mock(WebElement.class);
 
@@ -308,70 +318,7 @@ public class PageObjectProxyTest {
         myPage.elementByClassName("session");
     }
 
-    interface MyPage {
-
-        @FindElementBy(id = "name")
-        String getName();
-
-        @FindElementBy(placeholder = "Email")
-        WebElementWrapper email();
-
-        @FindElementBy(name = "age")
-        WebElementWrapper age();
-
-        @FindElementBy(css = ".birthday")
-        WebElementWrapper birthday();
-
-        @FindElementBy(className = "birthday", andGetAttribute = "value")
-        String getBirthday();
-
-        @FindElementBy(xpath = "//input[name()='birthday']", andGetAttribute = "value")
-        Date getBirthDate();
-
-        @FindElementBy
-        String undefined();
-
-        @FindElementBy(tagName = "table")
-        TableElement results();
-
-        @FindElementBy(tagName = "select")
-        List<SelectElement> selects();
-
-        @FindElementBy(tagName = "a")
-        List<String> links();
-
-        @FindElementBy(linkText = "link")
-        WebElementDecorator failedLink();
-
-        @FindElementBy(button = "Submit")
-        WebElementWrapper submit();
-
-        @FindElementBy(partialLinkText = "Address")
-        WebElementWrapper address();
-
-        @FindElementBy(label = "Login")
-        WebElementWrapper login();
-
-        @FindElementBy(labelContaining = "Password or PIN")
-        WebElementWrapper password();
-
-        @FindElementBy(value = "MALE")
-        WebElementWrapper genderMale();
-
-        @FindElementBy(css = ".{className}:nth-child({index})")
-        WebElementWrapper elementByClassNameAndIndex(@Param("className") String className, @Param("index") int index);
-
-        @FindElementBy(css = ".{className}")
-        WebElementWrapper elementByClassName(String className);
-
-        @PageObject
-        SubPage subPage();
-
-        String nothing();
-
-    }
-
-    interface SubPage {
+    public interface SubPage {
 
         @FindElementBy(tagName = "h1")
         WebElementWrapper title();

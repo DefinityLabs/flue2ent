@@ -1,8 +1,8 @@
 package io.github.definitylabs.flue2ent;
 
 import io.github.definitylabs.flue2ent.dsl.WebContentDsl;
+import io.github.definitylabs.flue2ent.element.FindElementBy;
 import io.github.definitylabs.flue2ent.element.WebElementWrapper;
-import io.github.definitylabs.flue2ent.page.FindElementBy;
 import io.github.definitylabs.flue2ent.plugin.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
