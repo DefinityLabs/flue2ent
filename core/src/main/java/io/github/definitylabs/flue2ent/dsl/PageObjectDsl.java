@@ -3,11 +3,11 @@ package io.github.definitylabs.flue2ent.dsl;
 import io.github.definitylabs.flue2ent.Website;
 import org.openqa.selenium.WebDriver;
 
-public abstract class WebContentDsl<T> {
+public abstract class PageObjectDsl<T> {
 
     private Website website;
 
-    protected WebContentDsl() {
+    protected PageObjectDsl() {
 
     }
 

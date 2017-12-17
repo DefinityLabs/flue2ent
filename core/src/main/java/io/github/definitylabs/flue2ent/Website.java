@@ -1,6 +1,6 @@
 package io.github.definitylabs.flue2ent;
 
-import io.github.definitylabs.flue2ent.dsl.WebContentDsl;
+import io.github.definitylabs.flue2ent.dsl.PageObjectDsl;
 import io.github.definitylabs.flue2ent.element.WebElementWrapper;
 import io.github.definitylabs.flue2ent.page.PageObjectProxy;
 import io.github.definitylabs.flue2ent.plugin.*;
@@ -49,7 +49,7 @@ public class Website {
                 .collect(Collectors.toList());
     }
 
-    public <R, T extends WebContentDsl<R>> R at(T content) {
+    public <R, T extends PageObjectDsl<R>> R at(T content) {
         content.setWebsite(this);
         return content.getResponse();
     }

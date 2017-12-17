@@ -11,10 +11,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class WebContentDslTest {
+public class PageObjectDslTest {
 
     @Mock
-    private WebContentDsl webContentDsl;
+    private PageObjectDsl webContentDsl;
 
     @Test
     public void website_returnsWebsite() {
@@ -53,7 +53,7 @@ public class WebContentDslTest {
 
     @Test
     public void getResponse_returnsSameInstance() {
-        class Content extends WebContentDsl<Content> {
+        class Content extends PageObjectDsl<Content> {
 
         }
 

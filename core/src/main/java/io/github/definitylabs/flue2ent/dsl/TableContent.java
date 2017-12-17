@@ -4,7 +4,7 @@ import io.github.definitylabs.flue2ent.element.WebElementWrapper;
 import io.github.definitylabs.flue2ent.element.table.TableElement;
 import org.openqa.selenium.By;
 
-public class TableContent extends WebContentDsl<TableElement> {
+public class TableContent extends PageObjectDsl<TableElement> {
 
     protected static final String TABLE_TAG = "table";
 

@@ -1,6 +1,6 @@
 package io.github.definitylabs.flue2ent;
 
-import io.github.definitylabs.flue2ent.dsl.WebContentDsl;
+import io.github.definitylabs.flue2ent.dsl.PageObjectDsl;
 import io.github.definitylabs.flue2ent.element.FindElementBy;
 import io.github.definitylabs.flue2ent.element.WebElementWrapper;
 import io.github.definitylabs.flue2ent.plugin.*;
@@ -109,11 +109,11 @@ public class WebsiteTest {
 
     @Test
     public void at_setsDriverAndReturnsParameter() {
-        WebContentDsl<WebContentDsl> webContentDsl = mock(WebContentDsl.class);
+        PageObjectDsl<PageObjectDsl> webContentDsl = mock(PageObjectDsl.class);
         when(webContentDsl.getResponse()).thenReturn(webContentDsl);
 
         Website website = Website.with(driver).visit(TEST_WEBSITE_URL);
-        WebContentDsl at = website.at(webContentDsl);
+        PageObjectDsl at = website.at(webContentDsl);
 
         verify(webContentDsl).setWebsite(website);
         assertThat(at).isSameAs(webContentDsl);
@@ -135,7 +135,7 @@ public class WebsiteTest {
     public void at_setsDriverAndResponseParameter() {
         WebElementWrapper webElementWrapper = mock(WebElementWrapper.class);
 
-        WebContentDsl<WebElementWrapper> webContentDsl = mock(WebContentDsl.class);
+        PageObjectDsl<WebElementWrapper> webContentDsl = mock(PageObjectDsl.class);
         when(webContentDsl.getResponse()).thenReturn(webElementWrapper);
 
         Website website = Website.with(driver).visit(TEST_WEBSITE_URL);
