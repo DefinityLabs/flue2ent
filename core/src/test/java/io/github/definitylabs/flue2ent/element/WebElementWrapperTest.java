@@ -1,5 +1,6 @@
 package io.github.definitylabs.flue2ent.element;
 
+import io.github.definitylabs.flue2ent.data.FakeTableElement;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -162,6 +163,15 @@ public class WebElementWrapperTest {
         SpecialElement specialElement = wrapper.as(SpecialElement::new);
         assertThat(specialElement).isNotNull();
         assertThat(specialElement.webElement()).isSameAs(wrapper);
+    }
+
+    @Test
+    public void as_whenDecoratorIsSmart_returnsDecorator() {
+        WebElementWrapper wrapper = new WebElementWrapper(webElement);
+
+        FakeTableElement fakeTableElement = wrapper.as(FakeTableElement.class);
+        assertThat(fakeTableElement).isNotNull();
+        assertThat(fakeTableElement.webElement()).isSameAs(wrapper);
     }
 
     @Test

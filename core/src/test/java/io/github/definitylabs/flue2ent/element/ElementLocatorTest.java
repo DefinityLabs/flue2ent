@@ -1,7 +1,7 @@
 package io.github.definitylabs.flue2ent.element;
 
 
-import io.github.definitylabs.flue2ent.page.MyPage;
+import io.github.definitylabs.flue2ent.data.MyPage;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;

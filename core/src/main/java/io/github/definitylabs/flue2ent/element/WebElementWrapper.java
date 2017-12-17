@@ -1,5 +1,7 @@
 package io.github.definitylabs.flue2ent.element;
 
+import io.github.definitylabs.flue2ent.element.simple.SimpleWebElementDecorator;
+import io.github.definitylabs.flue2ent.element.simple.SimpleWebElementDecoratorProxy;
 import org.assertj.core.api.AbstractObjectAssert;
 import org.assertj.core.api.Assertions;
 import org.openqa.selenium.By;
@@ -71,6 +73,10 @@ public class WebElementWrapper {
 
     public final <T extends WebElementDecorator> T as(Function<WebElementWrapper, T> decorator) {
         return decorator.apply(this);
+    }
+
+    public final <T extends SimpleWebElementDecorator> T as(Class<T> decorator) {
+        return SimpleWebElementDecoratorProxy.newInstance(decorator, this);
     }
 
     public final <V> Supplier<V> has(Function<WebElementWrapper, V> isTrue) {

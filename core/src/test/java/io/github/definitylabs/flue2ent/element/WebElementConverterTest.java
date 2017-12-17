@@ -1,15 +1,19 @@
 package io.github.definitylabs.flue2ent.element;
 
+import io.github.definitylabs.flue2ent.data.FakeTableElement;
 import io.github.definitylabs.flue2ent.element.list.SelectElement;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+
+import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -87,6 +91,22 @@ public class WebElementConverterTest {
         SelectElement selectElement = (SelectElement) WebElementConverter.convertTo(webElementWrapper, "", SelectElement.class);
 
         assertThat(selectElement.webElement()).isEqualTo(webElementWrapper);
+    }
+
+    @Test
+    public void convertTo__returnsSelectElement() throws Exception {
+        WebElement rowElementOne = mock(WebElement.class);
+        WebElement rowElementTwo = mock(WebElement.class);
+
+        WebElement webElement = mock(WebElement.class);
+        WebElementWrapper webElementWrapper = new WebElementWrapper(webElement);
+        when(webElement.findElements(By.className("row"))).thenReturn(Arrays.asList(rowElementOne, rowElementTwo));
+
+        FakeTableElement fakeTableElement = (FakeTableElement) WebElementConverter.convertTo(webElementWrapper, "", FakeTableElement.class);
+
+        assertThat(fakeTableElement.rows()).hasSize(2);
+        assertThat(fakeTableElement.rows().get(0).webElement()).isEqualTo(rowElementOne);
+        assertThat(fakeTableElement.rows().get(1).webElement()).isEqualTo(rowElementTwo);
     }
 
     @Test

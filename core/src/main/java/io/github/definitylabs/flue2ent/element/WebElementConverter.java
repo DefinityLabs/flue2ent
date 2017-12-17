@@ -1,11 +1,14 @@
 package io.github.definitylabs.flue2ent.element;
 
+import io.github.definitylabs.flue2ent.element.simple.SimpleWebElementDecorator;
+
 public class WebElementConverter {
 
     WebElementConverter() {
 
     }
 
+    @SuppressWarnings("unchecked")
     public static Object convertTo(WebElementWrapper element, String attributeName, Class<?> returnType) {
         if (!attributeName.isEmpty()) {
             if (!returnType.equals(String.class)) {
@@ -22,6 +25,8 @@ public class WebElementConverter {
                     throw new RuntimeException("Cannot create instance of " + returnType.getName(), e);
                 }
             });
+        } else if (SimpleWebElementDecorator.class.isAssignableFrom(returnType)) {
+            return element.as((Class<? extends SimpleWebElementDecorator>) returnType);
         } else if (returnType.equals(String.class)) {
             return element.text();
         }

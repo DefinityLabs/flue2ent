@@ -1,4 +1,4 @@
-package io.github.definitylabs.flue2ent.page;
+package io.github.definitylabs.flue2ent.data;
 
 import io.github.definitylabs.flue2ent.element.FindElementBy;
 import io.github.definitylabs.flue2ent.element.Param;
@@ -6,6 +6,7 @@ import io.github.definitylabs.flue2ent.element.WebElementDecorator;
 import io.github.definitylabs.flue2ent.element.WebElementWrapper;
 import io.github.definitylabs.flue2ent.element.list.SelectElement;
 import io.github.definitylabs.flue2ent.element.table.TableElement;
+import io.github.definitylabs.flue2ent.page.PageObject;
 
 import java.util.Date;
 import java.util.List;
@@ -71,7 +72,7 @@ public interface MyPage {
     WebElementWrapper elementByClassName(String className);
 
     @PageObject
-    PageObjectProxyTest.SubPage subPage();
+    SubPage subPage();
 
     String nothing();
 
