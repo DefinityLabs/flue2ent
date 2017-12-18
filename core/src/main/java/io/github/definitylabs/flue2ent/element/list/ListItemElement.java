@@ -12,4 +12,8 @@ public class ListItemElement extends WebElementDecorator {
         this.listElement = listElement;
     }
 
+    public String text() {
+        return webElement().text();
+    }
+
 }
