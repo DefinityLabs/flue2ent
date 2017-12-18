@@ -13,4 +13,8 @@ public class TableColumnElement extends WebElementDecorator {
         this.table = table;
     }
 
+    public String text() {
+        return webElement().text();
+    }
+
 }
