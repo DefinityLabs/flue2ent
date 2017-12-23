@@ -1,6 +1,8 @@
 package io.github.definitylabs.flue2ent.element;
 
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Select;
 
 public class SeleniumElementCreator {
@@ -11,6 +13,10 @@ public class SeleniumElementCreator {
 
     public static Select createSelect(WebElement webElement) {
         return new Select(webElement);
+    }
+
+    public static FluentWait<WebDriver> createFluentWait(WebDriver driver) {
+        return new FluentWait<>(driver);
     }
 
 }

@@ -1,14 +1,17 @@
 package io.github.definitylabs.flue2ent.plugin;
 
 import io.github.definitylabs.flue2ent.Website;
+import io.github.definitylabs.flue2ent.element.SeleniumElementCreator;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.FluentWait;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
@@ -20,7 +23,8 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(SeleniumElementCreator.class)
 public class WaiterPluginTest {
 
     @Mock
@@ -31,7 +35,7 @@ public class WaiterPluginTest {
 
     @Before
     public void beforeEach() throws Exception {
-        when(website.createFluentWait()).thenReturn(wait);
+        PowerMockito.mockStatic(SeleniumElementCreator.class, invocationOnMock -> wait);
     }
 
     @Test

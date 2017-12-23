@@ -1,6 +1,7 @@
 package io.github.definitylabs.flue2ent.plugin;
 
 import io.github.definitylabs.flue2ent.Website;
+import io.github.definitylabs.flue2ent.element.SeleniumElementCreator;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.FluentWait;
 
@@ -16,7 +17,7 @@ public class WaiterPlugin implements WebsitePlugin {
 
     public WaiterPlugin(Website website) {
         this.website = website;
-        this.wait = website.createFluentWait();
+        this.wait = SeleniumElementCreator.createFluentWait(website.getDriver());
     }
 
     public final WaiterPlugin upTo(int duration, TimeUnit unit) {

@@ -6,7 +6,6 @@ import io.github.definitylabs.flue2ent.page.PageObjectProxy;
 import io.github.definitylabs.flue2ent.plugin.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.FluentWait;
 
 import java.util.List;
 import java.util.function.Function;
@@ -29,10 +28,6 @@ public class Website {
 
     public WebDriver getDriver() {
         return driver;
-    }
-
-    public FluentWait<WebDriver> createFluentWait() {
-        return new FluentWait<>(driver);
     }
 
     public String getUrl() {

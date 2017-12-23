@@ -12,7 +12,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
-import org.openqa.selenium.support.ui.FluentWait;
 
 import java.util.Arrays;
 import java.util.List;
@@ -47,15 +46,6 @@ public class WebsiteTest {
         Website website = Website.with(driver).visit(TEST_WEBSITE_URL);
 
         assertThat(website.getDriver()).isSameAs(driver);
-    }
-
-    @Test
-    public void createFluentWait_returnsWait() {
-        Website website = Website.with(driver).visit(TEST_WEBSITE_URL);
-
-        FluentWait<WebDriver> wait = website.createFluentWait();
-
-        assertThat(wait).isNotNull();
     }
 
     @Test
