@@ -183,23 +183,6 @@ public class WebElementWrapperTest {
         assertThat(supplier.get()).isSameAs(wrapper);
     }
 
-    @Test
-    public void assertThis_returnsAssertJObject() {
-        WebElementWrapper wrapper = new WebElementWrapper(webElement);
-
-        wrapper.assertThis().isSameAs(wrapper);
-    }
-
-    @Test
-    public void assertThat_returnsAssertJObject() {
-        WebElementWrapper wrapper = new WebElementWrapper(webElement);
-
-        String text = "Text";
-        when(webElement.getText()).thenReturn(text);
-
-        wrapper.assertThat(WebElementWrapper::text).isEqualTo(text);
-    }
-
     class SpecialElement extends WebElementDecorator {
         SpecialElement(WebElementWrapper element) {
             super(element);
