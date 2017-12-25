@@ -5,10 +5,13 @@ import io.github.definitylabs.flue2ent.element.WebElementWrapper;
 import io.github.definitylabs.flue2ent.page.PageObjectProxy;
 import io.github.definitylabs.flue2ent.plugin.*;
 import org.openqa.selenium.By;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class Website {
@@ -24,6 +27,22 @@ public class Website {
 
     public static WebsiteBuilder with(WebDriver driver) {
         return new WebsiteBuilder(driver);
+    }
+
+    public static <R, T extends PageObjectDsl<R>> Function<Website, R> from(T content) {
+        return website -> website.at(content);
+    }
+
+    public static <T> Function<Website, T> from(Class<T> type) {
+        return website -> website.at(type);
+    }
+
+    public static Function<Website, WebElementWrapper> element(By by) {
+        return website -> website.findElement(by);
+    }
+
+    public static Function<Website, List<WebElementWrapper>> elements(By by) {
+        return website -> website.findElements(by);
     }
 
     public WebDriver getDriver() {
@@ -56,6 +75,14 @@ public class Website {
     public Website refresh() {
         driver.navigate().refresh();
         return this;
+    }
+
+    public <T> T get(Function<Website, T> webElement) {
+        return justWait().upTo(3, TimeUnit.SECONDS).ignoring(StaleElementReferenceException.class).until(webElement);
+    }
+
+    public final <V> Supplier<V> has(Function<Website, V> isTrue) {
+        return () -> isTrue.apply(this);
     }
 
     @SuppressWarnings("unchecked")

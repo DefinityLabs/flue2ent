@@ -3,19 +3,25 @@ package io.github.definitylabs.flue2ent;
 import io.github.definitylabs.flue2ent.dsl.PageObjectDsl;
 import io.github.definitylabs.flue2ent.element.FindElementBy;
 import io.github.definitylabs.flue2ent.element.WebElementWrapper;
+import io.github.definitylabs.flue2ent.element.table.TableElement;
 import io.github.definitylabs.flue2ent.plugin.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openqa.selenium.By;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
+import static io.github.definitylabs.flue2ent.Website.from;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
@@ -39,6 +45,67 @@ public class WebsiteTest {
         Website.with(driver).visit(TEST_WEBSITE_URL);
 
         verify(driver).get(TEST_WEBSITE_URL);
+    }
+
+    @Test
+    public void from_returnsFunction() {
+        PageObjectDsl<PageObjectDsl> content = mock(PageObjectDsl.class);
+
+        Website website = mock(Website.class);
+        when(website.at(content)).thenReturn(content);
+
+        Function<Website, PageObjectDsl> from = Website.from(content);
+        PageObjectDsl response = from.apply(website);
+
+        verify(website).at(content);
+        assertThat(response).isSameAs(content);
+    }
+
+    @Test
+    public void from_withClass_returnsFunction() {
+        TableElement tableElement = mock(TableElement.class);
+
+        Website website = mock(Website.class);
+        when(website.at(TableElement.class)).thenReturn(tableElement);
+
+        Function<Website, TableElement> from = Website.from(TableElement.class);
+        TableElement response = from.apply(website);
+
+        verify(website).at(TableElement.class);
+        assertThat(response).isSameAs(tableElement);
+    }
+
+    @Test
+    public void element_returnsFunction() {
+        By byTable = By.tagName("table");
+
+        WebElementWrapper mockedElement = mock(WebElementWrapper.class);
+
+        Website website = mock(Website.class);
+        when(website.findElement(byTable)).thenReturn(mockedElement);
+
+        Function<Website, WebElementWrapper> element = Website.element(byTable);
+        WebElementWrapper response = element.apply(website);
+
+        verify(website).findElement(byTable);
+        assertThat(response).isSameAs(mockedElement);
+    }
+
+    @Test
+    public void elements_returnsFunction() {
+        By byTable = By.tagName("table");
+
+        WebElementWrapper mockedElement = mock(WebElementWrapper.class);
+
+        Website website = mock(Website.class);
+        when(website.findElements(byTable)).thenReturn(Collections.singletonList(mockedElement));
+
+        Function<Website, List<WebElementWrapper>> element = Website.elements(byTable);
+        List<WebElementWrapper> response = element.apply(website);
+
+        verify(website).findElements(byTable);
+        assertThat(response).hasSize(1);
+        assertThat(response).contains(mockedElement);
     }
 
     @Test
@@ -144,6 +211,33 @@ public class WebsiteTest {
         website.refresh();
 
         verify(navigation).refresh();
+    }
+
+    @Test
+    public void get_waitsElementExistAndReturn() {
+        WebElementWrapper webElementWrapper = mock(WebElementWrapper.class);
+
+        PageObjectDsl<WebElementWrapper> webContentDsl = mock(PageObjectDsl.class);
+        when(webContentDsl.getResponse())
+                .thenThrow(new StaleElementReferenceException("element"))
+                .thenThrow(new StaleElementReferenceException("element"))
+                .thenReturn(webElementWrapper);
+
+        Website website = Website.with(driver).visit(TEST_WEBSITE_URL);
+
+        WebElementWrapper elementWrapper = website.get(from(webContentDsl));
+
+        assertThat(elementWrapper).isSameAs(webElementWrapper);
+    }
+
+    @Test
+    public void has_returnsSupplier() {
+        Website website = Website.with(driver).visit(TEST_WEBSITE_URL);
+        Supplier<Boolean> has = website.has(w -> true);
+
+        Boolean response = has.get();
+
+        assertThat(response).isTrue();
     }
 
     @Test
