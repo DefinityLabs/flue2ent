@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.definitylabs</groupId>
+        <groupId>org.definitylabs.flue2ent</groupId>
         <artifactId>flue2ent</artifactId>
         <version>0.0.1</version>
     </parent>
@@ -11,12 +11,12 @@
     <artifactId>flue2ent-test</artifactId>
     <packaging>jar</packaging>
 
-    <name>Flue2ent Test</name>
-    <url>http://definitylabs.org/#/products/flue2ent</url>
+    <name>flue2ent test</name>
+    <url>http://flue2ent.definitylabs.org</url>
 
     <dependencies>
         <dependency>
-            <groupId>org.definitylabs</groupId>
+            <groupId>org.definitylabs.flue2ent</groupId>
             <artifactId>flue2ent-core</artifactId>
             <version>${project.version}</version>
         </dependency>

@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.definitylabs</groupId>
+        <groupId>org.definitylabs.flue2ent</groupId>
         <artifactId>flue2ent</artifactId>
         <version>0.0.1</version>
     </parent>
@@ -11,8 +11,8 @@
     <artifactId>flue2ent-core</artifactId>
     <packaging>jar</packaging>
 
-    <name>Flue2ent Core</name>
-    <url>http://definitylabs.org/#/products/flue2ent</url>
+    <name>flue2ent core</name>
+    <url>http://flue2ent.definitylabs.org</url>
 
     <properties>
         <selenium.version>3.7.1</selenium.version>
