@@ -2,13 +2,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>io.github.definitylabs</groupId>
+    <groupId>org.definitylabs</groupId>
     <artifactId>flue2ent</artifactId>
     <version>0.0.1</version>
     <packaging>pom</packaging>
 
     <name>Flue2ent</name>
-    <url>https://definitylabs.github.io/#/products/flue2ent</url>
+    <url>http://definitylabs.org/#/products/flue2ent</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
