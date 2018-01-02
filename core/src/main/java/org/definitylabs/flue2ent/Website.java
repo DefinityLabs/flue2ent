@@ -45,6 +45,10 @@ public class Website {
         return website -> website.findElements(by);
     }
 
+    public static Function<Website, Boolean> isLoad() {
+        return website -> website.page().isLoad();
+    }
+
     public WebDriver getDriver() {
         return driver;
     }
@@ -81,7 +85,7 @@ public class Website {
         return justWait().upTo(3, TimeUnit.SECONDS).ignoring(StaleElementReferenceException.class).until(webElement);
     }
 
-    public final <V> Supplier<V> has(Function<Website, V> isTrue) {
+    public final <V> Supplier<V> hasFound(Function<Website, V> isTrue) {
         return () -> isTrue.apply(this);
     }
 

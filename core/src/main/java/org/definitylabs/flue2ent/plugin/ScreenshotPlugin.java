@@ -31,10 +31,9 @@ public class ScreenshotPlugin implements WebDriverPlugin {
         consumer.accept(screenshotAsFile);
     }
 
-    public void take() {
+    public void take(String fileName) {
         takeAsFile(file -> {
             File screenshotDirectory = new File(SCREENSHOT_DIRECTORY_NAME);
-            String fileName = "screenshot_" + timestampFormat.format(new Date()) + ".png";
             File screenshotFile = new File(screenshotDirectory, fileName);
 
             try {
@@ -44,6 +43,11 @@ public class ScreenshotPlugin implements WebDriverPlugin {
                 throw new RuntimeException("Cannot save screenshot file", e);
             }
         });
+    }
+
+    public void take() {
+        String fileName = "screenshot_" + timestampFormat.format(new Date()) + ".png";
+        take(fileName);
     }
 
 }

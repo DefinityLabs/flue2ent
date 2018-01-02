@@ -109,6 +109,22 @@ public class WebsiteTest {
     }
 
     @Test
+    public void isLoad_returnsFunction() {
+        Function<Website, Boolean> isLoad = Website.isLoad();
+
+        Website website = mock(Website.class);
+        PagePlugin page = mock(PagePlugin.class);
+        when(website.page()).thenReturn(page);
+        when(page.isLoad()).thenReturn(true);
+
+        Boolean response = isLoad.apply(website);
+
+        verify(page).isLoad();
+
+        assertThat(response).isTrue();
+    }
+
+    @Test
     public void getDriver_returnsWebDriver() {
         Website website = Website.with(driver).visit(TEST_WEBSITE_URL);
 
@@ -231,11 +247,11 @@ public class WebsiteTest {
     }
 
     @Test
-    public void has_returnsSupplier() {
+    public void hasFound_returnsSupplier() {
         Website website = Website.with(driver).visit(TEST_WEBSITE_URL);
-        Supplier<Boolean> has = website.has(w -> true);
+        Supplier<Boolean> hasFound = website.hasFound(w -> true);
 
-        Boolean response = has.get();
+        Boolean response = hasFound.get();
 
         assertThat(response).isTrue();
     }
