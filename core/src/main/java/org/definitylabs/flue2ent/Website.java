@@ -57,6 +57,11 @@ public class Website {
         return url;
     }
 
+    public Website visit(String url) {
+        driver.get(url);
+        return this;
+    }
+
     public WebElementWrapper findElement(By by) {
         return new WebElementWrapper(driver.findElement(by));
     }

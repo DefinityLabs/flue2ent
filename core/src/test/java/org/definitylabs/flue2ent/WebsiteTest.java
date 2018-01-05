@@ -139,6 +139,16 @@ public class WebsiteTest {
     }
 
     @Test
+    public void website_visit_callsDriverGet() {
+        Website website = Website.with(driver).visit(TEST_WEBSITE_URL);
+
+        String url = "http://google.com";
+        website.visit(url);
+
+        verify(driver).get(url);
+    }
+
+    @Test
     public void justWait_returnsWebsiteWaiter() {
         Website website = Website.with(driver).visit(TEST_WEBSITE_URL);
 
