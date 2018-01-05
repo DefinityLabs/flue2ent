@@ -1,4 +1,4 @@
-package org.definitylabs.flue2ent.dsl;
+package org.definitylabs.flue2ent.page;
 
 import org.definitylabs.flue2ent.Website;
 import org.junit.Test;
@@ -11,10 +11,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class PageObjectDslTest {
+public class PageObjectTest {
 
     @Mock
-    private PageObjectDsl webContentDsl;
+    private PageObject webContentDsl;
 
     @Test
     public void website_returnsWebsite() {
@@ -53,7 +53,7 @@ public class PageObjectDslTest {
 
     @Test
     public void getResponse_returnsSameInstance() {
-        class Content extends PageObjectDsl<Content> {
+        class Content extends PageObject<Content> {
 
         }
 

@@ -24,7 +24,7 @@ public class PageObjectProxy extends AbstractWebElementProxy {
 
     @Override
     protected boolean canHandle(Method method) {
-        return method.isAnnotationPresent(PageObject.class);
+        return method.isAnnotationPresent(PageObjectRef.class);
     }
 
     @Override

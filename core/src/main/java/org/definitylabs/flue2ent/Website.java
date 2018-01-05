@@ -1,7 +1,7 @@
 package org.definitylabs.flue2ent;
 
-import org.definitylabs.flue2ent.dsl.PageObjectDsl;
 import org.definitylabs.flue2ent.element.WebElementWrapper;
+import org.definitylabs.flue2ent.page.PageObject;
 import org.definitylabs.flue2ent.page.PageObjectProxy;
 import org.definitylabs.flue2ent.plugin.*;
 import org.openqa.selenium.By;
@@ -29,7 +29,7 @@ public class Website {
         return new WebsiteBuilder(driver);
     }
 
-    public static <R, T extends PageObjectDsl<R>> Function<Website, R> from(T content) {
+    public static <R, T extends PageObject<R>> Function<Website, R> from(T content) {
         return website -> website.at(content);
     }
 
@@ -67,7 +67,7 @@ public class Website {
                 .collect(Collectors.toList());
     }
 
-    public <R, T extends PageObjectDsl<R>> R at(T content) {
+    public <R, T extends PageObject<R>> R at(T content) {
         content.setWebsite(this);
         return content.getResponse();
     }

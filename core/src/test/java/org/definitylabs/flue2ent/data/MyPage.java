@@ -6,7 +6,7 @@ import org.definitylabs.flue2ent.element.WebElementDecorator;
 import org.definitylabs.flue2ent.element.WebElementWrapper;
 import org.definitylabs.flue2ent.element.list.SelectElement;
 import org.definitylabs.flue2ent.element.table.TableElement;
-import org.definitylabs.flue2ent.page.PageObject;
+import org.definitylabs.flue2ent.page.PageObjectRef;
 
 import java.util.Date;
 import java.util.List;
@@ -71,7 +71,7 @@ public interface MyPage {
     @FindElementBy(css = ".{className}")
     WebElementWrapper elementByClassName(String className);
 
-    @PageObject
+    @PageObjectRef
     SubPage subPage();
 
     String nothing();

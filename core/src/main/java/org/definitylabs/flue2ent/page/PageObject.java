@@ -1,11 +1,36 @@
 package org.definitylabs.flue2ent.page;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import org.definitylabs.flue2ent.Website;
+import org.openqa.selenium.WebDriver;
 
-@Target(ElementType.METHOD)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface PageObject {
+public abstract class PageObject<T> {
+
+    private Website website;
+
+    protected PageObject() {
+
+    }
+
+    protected final Website website() {
+        return website;
+    }
+
+    protected final WebDriver driver() {
+        return website.getDriver();
+    }
+
+    public final void setWebsite(Website website) {
+        this.website = website;
+        init();
+    }
+
+    @SuppressWarnings("unchecked")
+    public T getResponse() {
+        return (T) this;
+    }
+
+    protected void init() {
+
+    }
+
 }

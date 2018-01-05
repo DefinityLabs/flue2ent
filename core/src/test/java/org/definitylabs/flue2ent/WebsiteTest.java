@@ -1,9 +1,9 @@
 package org.definitylabs.flue2ent;
 
-import org.definitylabs.flue2ent.dsl.PageObjectDsl;
 import org.definitylabs.flue2ent.element.FindElementBy;
 import org.definitylabs.flue2ent.element.WebElementWrapper;
 import org.definitylabs.flue2ent.element.table.TableElement;
+import org.definitylabs.flue2ent.page.PageObject;
 import org.definitylabs.flue2ent.plugin.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -49,13 +49,13 @@ public class WebsiteTest {
 
     @Test
     public void from_returnsFunction() {
-        PageObjectDsl<PageObjectDsl> content = mock(PageObjectDsl.class);
+        PageObject<PageObject> content = mock(PageObject.class);
 
         Website website = mock(Website.class);
         when(website.at(content)).thenReturn(content);
 
-        Function<Website, PageObjectDsl> from = Website.from(content);
-        PageObjectDsl response = from.apply(website);
+        Function<Website, PageObject> from = Website.from(content);
+        PageObject response = from.apply(website);
 
         verify(website).at(content);
         assertThat(response).isSameAs(content);
@@ -182,11 +182,11 @@ public class WebsiteTest {
 
     @Test
     public void at_setsDriverAndReturnsParameter() {
-        PageObjectDsl<PageObjectDsl> webContentDsl = mock(PageObjectDsl.class);
+        PageObject<PageObject> webContentDsl = mock(PageObject.class);
         when(webContentDsl.getResponse()).thenReturn(webContentDsl);
 
         Website website = Website.with(driver).visit(TEST_WEBSITE_URL);
-        PageObjectDsl at = website.at(webContentDsl);
+        PageObject at = website.at(webContentDsl);
 
         verify(webContentDsl).setWebsite(website);
         assertThat(at).isSameAs(webContentDsl);
@@ -208,7 +208,7 @@ public class WebsiteTest {
     public void at_setsDriverAndResponseParameter() {
         WebElementWrapper webElementWrapper = mock(WebElementWrapper.class);
 
-        PageObjectDsl<WebElementWrapper> webContentDsl = mock(PageObjectDsl.class);
+        PageObject<WebElementWrapper> webContentDsl = mock(PageObject.class);
         when(webContentDsl.getResponse()).thenReturn(webElementWrapper);
 
         Website website = Website.with(driver).visit(TEST_WEBSITE_URL);
@@ -233,7 +233,7 @@ public class WebsiteTest {
     public void get_waitsElementExistAndReturn() {
         WebElementWrapper webElementWrapper = mock(WebElementWrapper.class);
 
-        PageObjectDsl<WebElementWrapper> webContentDsl = mock(PageObjectDsl.class);
+        PageObject<WebElementWrapper> webContentDsl = mock(PageObject.class);
         when(webContentDsl.getResponse())
                 .thenThrow(new StaleElementReferenceException("element"))
                 .thenThrow(new StaleElementReferenceException("element"))
