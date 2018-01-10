@@ -1,11 +1,14 @@
 package org.definitylabs.flue2ent.test;
 
 import org.definitylabs.flue2ent.Website;
+import org.junit.jupiter.api.DynamicTest;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
 public final class Scenario {
 
@@ -27,6 +30,10 @@ public final class Scenario {
 
     public final String getTitle() {
         return title;
+    }
+
+    public final DynamicTest test(Website website) {
+        return dynamicTest(title, () -> executeAt(website));
     }
 
     public static final class ScenarioBuilder {

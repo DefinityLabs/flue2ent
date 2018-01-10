@@ -3,6 +3,7 @@ package org.definitylabs.flue2ent.test;
 import org.definitylabs.flue2ent.Website;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.DynamicTest;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -110,6 +111,18 @@ public class ScenarioTest {
 
         assertThat(scenario.getTitle()).isEqualTo("Title");
         assertThat(stepsOrder).containsSequence(stepOne, stepOne, stepTwo, stepThree, stepThree, stepTwo);
+    }
+
+    @Test
+    public void test_returnsDynamicTest() throws Throwable {
+        Scenario scenario = Scenario.title("Title").given(stepOne).build();
+        DynamicTest test = scenario.test(website);
+
+        assertThat(test.getDisplayName()).isEqualTo(scenario.getTitle());
+
+        test.getExecutable().execute();
+
+        verify(stepOne).execute();
     }
 
 }
