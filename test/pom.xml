@@ -26,6 +26,10 @@
         <url>https://github.com/DefinityLabs/flue2ent.git</url>
     </scm>
 
+    <properties>
+        <junit.jupter.version>5.0.2</junit.jupter.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.definitylabs.flue2ent</groupId>
@@ -35,7 +39,7 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
-            <version>5.0.2</version>
+            <version>${junit.jupter.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
