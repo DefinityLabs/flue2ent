@@ -1,2 +1,5 @@
 # flue2ent
-Professional e2e testing framework
+Fluent e2e testing framework
+
+Read full documentation at:
+http://definitylabs.org/#/products/flue2ent
