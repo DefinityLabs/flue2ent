@@ -158,6 +158,15 @@ public class WebsiteTest {
     }
 
     @Test
+    public void actions_returnsActionsPlugin() {
+        Website website = Website.with(driver).visit(TEST_WEBSITE_URL);
+
+        ActionsPlugin actionsPlugin = website.actions();
+
+        assertThat(actionsPlugin).isNotNull();
+    }
+
+    @Test
     public void findElement_callsDriverFindElement() {
         By bySelect = By.tagName("select");
 

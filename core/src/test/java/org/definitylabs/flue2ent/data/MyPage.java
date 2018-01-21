@@ -49,6 +49,9 @@ public interface MyPage {
     @FindElementBy(button = "Submit")
     WebElementWrapper submit();
 
+    @FindElementBy(buttonContaining = "Confirm")
+    WebElementWrapper confirm();
+
     @FindElementBy(partialLinkText = "Address")
     WebElementWrapper address();
 

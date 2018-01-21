@@ -37,6 +37,8 @@ public class ElementLocator {
             return ExtendedBy.byValue(replaceParameters(annotation.value(), parameters, args));
         } else if (isNotBlank(annotation.button())) {
             return ExtendedBy.byButton(replaceParameters(annotation.button(), parameters, args));
+        } else if (isNotBlank(annotation.buttonContaining())) {
+            return ExtendedBy.byButtonContaining(replaceParameters(annotation.buttonContaining(), parameters, args));
         }
         throw new IllegalArgumentException("element path is not defined");
     }

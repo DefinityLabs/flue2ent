@@ -2,6 +2,7 @@ package org.definitylabs.flue2ent.element;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Select;
 
@@ -17,6 +18,10 @@ public class SeleniumElementCreator {
 
     public static FluentWait<WebDriver> createFluentWait(WebDriver driver) {
         return new FluentWait<>(driver);
+    }
+
+    public static Actions createActions(WebDriver driver) {
+        return new Actions(driver);
     }
 
 }

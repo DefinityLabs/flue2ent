@@ -29,6 +29,8 @@ public @interface FindElementBy {
 
     String button() default "";
 
+    String buttonContaining() default "";
+
     String label() default "";
 
     String labelContaining() default "";

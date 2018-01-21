@@ -173,6 +173,16 @@ public class ElementLocatorTest {
     }
 
     @Test
+    public void by_whenFindByConfirm_returnsByConfirm() throws Exception {
+        Method method = getMethod("confirm");
+        FindElementBy findElementBy = method.getAnnotation(FindElementBy.class);
+
+        By by = ElementLocator.by(findElementBy, method.getParameters(), new Object[0]);
+
+        assertThat(by).isEqualTo(ExtendedBy.byButtonContaining("Confirm"));
+    }
+
+    @Test
     public void by_withoutParameters_throwsIllegalArgumentException() throws Exception {
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("element path is not defined");

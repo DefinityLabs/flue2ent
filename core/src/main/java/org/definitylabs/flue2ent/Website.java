@@ -107,6 +107,10 @@ public class Website {
         return plugin(WaiterPlugin::new);
     }
 
+    public ActionsPlugin actions() {
+        return driverPlugin(ActionsPlugin::new);
+    }
+
     public PagePlugin page() {
         return driverPlugin(PagePlugin::new);
     }

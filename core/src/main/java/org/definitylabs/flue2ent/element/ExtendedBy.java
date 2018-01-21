@@ -28,4 +28,8 @@ public class ExtendedBy {
         return By.xpath("//button[text()='" + text + "']");
     }
 
+    public static By byButtonContaining(String text) {
+        return By.xpath("//button[contains()='" + text + "']");
+    }
+
 }

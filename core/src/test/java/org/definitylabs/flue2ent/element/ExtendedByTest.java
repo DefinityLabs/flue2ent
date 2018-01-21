@@ -47,4 +47,11 @@ public class ExtendedByTest {
         assertThat(byButton).isEqualTo(By.xpath("//button[text()='text']"));
     }
 
+    @Test
+    public void byButtonContaining_returnsByXpath() {
+        By byButton = ExtendedBy.byButtonContaining("text");
+
+        assertThat(byButton).isEqualTo(By.xpath("//button[contains()='text']"));
+    }
+
 }
