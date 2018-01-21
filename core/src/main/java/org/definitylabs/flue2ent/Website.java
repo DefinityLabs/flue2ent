@@ -111,6 +111,10 @@ public class Website {
         return driverPlugin(ActionsPlugin::new);
     }
 
+    public MousePlugin mouse() {
+        return plugin(MousePlugin::new);
+    }
+
     public PagePlugin page() {
         return driverPlugin(PagePlugin::new);
     }

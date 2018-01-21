@@ -167,6 +167,15 @@ public class WebsiteTest {
     }
 
     @Test
+    public void mouse_returnsMousePlugin() {
+        Website website = Website.with(driver).visit(TEST_WEBSITE_URL);
+
+        MousePlugin mousePlugin = website.mouse();
+
+        assertThat(mousePlugin).isNotNull();
+    }
+
+    @Test
     public void findElement_callsDriverFindElement() {
         By bySelect = By.tagName("select");
 
