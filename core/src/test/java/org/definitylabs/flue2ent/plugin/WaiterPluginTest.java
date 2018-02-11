@@ -8,6 +8,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -96,6 +97,21 @@ public class WaiterPluginTest {
 
         verify(wait).until(any());
         verify(function).apply(website);
+        assertThat(element).isSameAs(mockedElement);
+    }
+
+    @Test
+    public void expectedCondition_until_callsWaitUntil() {
+        WaiterPlugin waiter = new WaiterPlugin(website);
+
+        WebElement mockedElement = mock(WebElement.class);
+        when(wait.until(any())).thenReturn(mockedElement);
+
+        ExpectedCondition<WebElement> expectedCondition = driver -> mockedElement;
+
+        WebElement element = waiter.until(expectedCondition);
+
+        verify(wait).until(same(expectedCondition));
         assertThat(element).isSameAs(mockedElement);
     }
 

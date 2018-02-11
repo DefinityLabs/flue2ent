@@ -3,6 +3,7 @@ package org.definitylabs.flue2ent.plugin;
 import org.definitylabs.flue2ent.Website;
 import org.definitylabs.flue2ent.element.SeleniumElementCreator;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.FluentWait;
 
 import java.util.Arrays;
@@ -39,6 +40,10 @@ public class WaiterPlugin implements WebsitePlugin {
     public final WaiterPlugin ignoring(Class<? extends Throwable>... exceptionType) {
         wait.ignoreAll(Arrays.asList(exceptionType));
         return this;
+    }
+
+    public final <V> V until(ExpectedCondition<V> expectedCondition) {
+        return wait.until(expectedCondition);
     }
 
     public final <V> V until(Function<Website, V> isTrue) {
