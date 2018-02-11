@@ -2,8 +2,10 @@ package org.definitylabs.flue2ent.test;
 
 import org.definitylabs.flue2ent.Website;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.jupiter.api.DynamicTest;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -11,10 +13,10 @@ import org.mockito.stubbing.Answer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
-
 
 @RunWith(MockitoJUnitRunner.class)
 public class ScenarioTest {
@@ -28,10 +30,15 @@ public class ScenarioTest {
     @Mock
     private AbstractStep stepThree;
 
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
+
     @Mock
     private Website website;
 
     private List<Step> stepsOrder;
+    @Mock
+    private AbstractDataStep<Object> stepFour;
 
     @Before
     public void beforeEach() {
@@ -114,6 +121,31 @@ public class ScenarioTest {
     }
 
     @Test
+    public void executeAt_withData_whenStepIsNotDataStep_callsExecute() {
+        Scenario scenario = Scenario.title("Title").given(stepOne).build();
+
+        Object data = new Object();
+        scenario.executeAt(website, data);
+
+        verify(stepOne).execute();
+
+        assertThat(scenario.getTitle()).isEqualTo("Title");
+    }
+
+    @Test
+    public void executeAt_withData_whenStepIsDataStep_callsExecute() {
+        Scenario scenario = Scenario.title("Title").given(stepFour).build();
+
+        Object data = new Object();
+        scenario.executeAt(website, data);
+
+        verify(stepFour).execute();
+
+        assertThat(scenario.getTitle()).isEqualTo("Title");
+        assertThat(stepFour.data()).isSameAs(data);
+    }
+
+    @Test
     public void test_returnsDynamicTest() throws Throwable {
         Scenario scenario = Scenario.title("Title").given(stepOne).build();
         DynamicTest test = scenario.test(website);
@@ -124,5 +156,63 @@ public class ScenarioTest {
 
         verify(stepOne).execute();
     }
+
+    @Test
+    public void test_withData_returnsDynamicTest() throws Throwable {
+        Scenario scenario = Scenario.title("Title [{data.name}]").given(stepFour).then(stepOne).build();
+        DataObject dataOne = new DataObject("dataOne");
+        DataObject dataTwo = new DataObject("dataTwo");
+        List<DynamicTest> tests = scenario.test(website, Stream.of(dataOne, dataTwo));
+
+        assertThat(tests).hasSize(2);
+        assertThat(tests.get(0).getDisplayName()).isEqualTo("Title [dataOne]");
+        assertThat(tests.get(1).getDisplayName()).isEqualTo("Title [dataTwo]");
+
+        tests.get(0).getExecutable().execute();
+        verify(stepFour).execute();
+        verify(stepOne).execute();
+        assertThat(stepFour.data()).isSameAs(dataOne);
+
+        tests.get(1).getExecutable().execute();
+        verify(stepFour, times(2)).execute();
+        verify(stepOne, times(2)).execute();
+        assertThat(stepFour.data()).isSameAs(dataTwo);
+    }
+
+    @Test
+    public void test_withData_withoutVariable_returnsDynamicTest() throws Throwable {
+        Scenario scenario = Scenario.title("Title").given(stepFour).then(stepOne).build();
+        DataObject dataOne = new DataObject("dataOne");
+        DataObject dataTwo = new DataObject("dataTwo");
+        List<DynamicTest> tests = scenario.test(website, Stream.of(dataOne, dataTwo));
+
+        assertThat(tests).hasSize(2);
+        assertThat(tests.get(0).getDisplayName()).isEqualTo("Title");
+        assertThat(tests.get(1).getDisplayName()).isEqualTo("Title");
+    }
+
+    @Test
+    public void test_withData_whenPropertyDoesNotExists_throwsRuntimeException() {
+        Scenario scenario = Scenario.title("Title [{data.wrongProperty}]").then(stepOne).build();
+        DataObject dataOne = new DataObject("dataOne");
+
+        expectedException.expect(RuntimeException.class);
+        expectedException.expectMessage("Error getting property from data: data.wrongProperty");
+
+        scenario.test(website, Stream.of(dataOne));
+    }
+
+    public static class DataObject {
+        private final String name;
+
+        private DataObject(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
+    }
+
 
 }
