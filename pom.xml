@@ -4,7 +4,7 @@
 
     <groupId>org.definitylabs.flue2ent</groupId>
     <artifactId>flue2ent</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
     <packaging>pom</packaging>
 
     <name>flue2ent</name>
