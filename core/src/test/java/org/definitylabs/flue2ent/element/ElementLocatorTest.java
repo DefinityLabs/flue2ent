@@ -17,11 +17,6 @@ public class ElementLocatorTest {
     public ExpectedException expectedException = ExpectedException.none();
 
     @Test
-    public void new_returnsNewInstance() {
-        assertThat(new ElementLocator()).isNotNull();
-    }
-
-    @Test
     public void by_whenFindById_returnsById() throws Exception {
         Method method = getMethod("getName");
         FindElementBy findElementBy = method.getAnnotation(FindElementBy.class);

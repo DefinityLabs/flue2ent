@@ -8,11 +8,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ExtendedByTest {
 
     @Test
-    public void new_returnsNewInstance() {
-        assertThat(new ExtendedBy()).isNotNull();
-    }
-
-    @Test
     public void byValue_returnsByXpath() {
         By byValue = ExtendedBy.byValue("value");
 

@@ -2,9 +2,9 @@ package org.definitylabs.flue2ent.element;
 
 import org.definitylabs.flue2ent.element.simple.SimpleWebElementDecorator;
 
-public class WebElementConverter {
+public final class WebElementConverter {
 
-    WebElementConverter() {
+    private WebElementConverter() {
 
     }
 

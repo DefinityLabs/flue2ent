@@ -3,9 +3,9 @@ package org.definitylabs.flue2ent.element.table.filter;
 import org.definitylabs.flue2ent.element.table.TableColumnElement;
 import org.definitylabs.flue2ent.element.table.TableRowElement;
 
-public class TableFilters {
+public final class TableFilters {
 
-    protected TableFilters() {
+    private TableFilters() {
 
     }
 

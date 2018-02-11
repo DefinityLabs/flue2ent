@@ -2,9 +2,9 @@ package org.definitylabs.flue2ent.element;
 
 import org.openqa.selenium.By;
 
-public class ExtendedBy {
+public final class ExtendedBy {
 
-    ExtendedBy() {
+    private ExtendedBy() {
 
     }
 

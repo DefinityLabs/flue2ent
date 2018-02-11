@@ -27,11 +27,6 @@ public class WebElementConverterTest {
     public ExpectedException expectedException = ExpectedException.none();
 
     @Test
-    public void new_returnsNewInstance() {
-        assertThat(new WebElementConverter()).isNotNull();
-    }
-
-    @Test
     public void convertTo_whenAttributeIsNotEmptyAndReturnTypeIsNotString_throwsIllegalArgumentException() {
         WebElementWrapper webElementWrapper = mock(WebElementWrapper.class);
 

@@ -4,9 +4,9 @@ import org.openqa.selenium.By;
 
 import java.lang.reflect.Parameter;
 
-public class ElementLocator {
+public final class ElementLocator {
 
-    ElementLocator() {
+    private ElementLocator() {
 
     }
 

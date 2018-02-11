@@ -20,11 +20,6 @@ public class SeleniumElementCreatorTest {
     private WebElement webElement;
 
     @Test
-    public void new_returnsNewInstance() {
-        assertThat(new SeleniumElementCreator()).isNotNull();
-    }
-
-    @Test
     public void createSelect_returnsNewSelectInstance() {
         when(webElement.getTagName()).thenReturn("select");
         when(webElement.getAttribute("multiple")).thenReturn("false");

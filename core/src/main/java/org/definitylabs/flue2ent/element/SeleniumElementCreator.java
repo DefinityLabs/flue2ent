@@ -6,9 +6,9 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Select;
 
-public class SeleniumElementCreator {
+public final class SeleniumElementCreator {
 
-    SeleniumElementCreator() {
+    private SeleniumElementCreator() {
 
     }
 
