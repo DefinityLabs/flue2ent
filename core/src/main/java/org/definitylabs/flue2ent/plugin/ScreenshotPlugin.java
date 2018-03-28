@@ -1,9 +1,11 @@
 package org.definitylabs.flue2ent.plugin;
 
 import org.apache.commons.io.FileUtils;
+import org.definitylabs.flue2ent.plugin.screenshot.ScreenshotImage;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 
+import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -48,6 +50,15 @@ public class ScreenshotPlugin implements WebDriverPlugin {
     public void take() {
         String fileName = "screenshot_" + timestampFormat.format(new Date()) + ".png";
         take(fileName);
+    }
+
+    public ScreenshotImage takeAnd() {
+        File screenshotAsFile = driver.getScreenshotAs(OutputType.FILE);
+        try {
+            return new ScreenshotImage(ImageIO.read(screenshotAsFile));
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
     }
 
 }
