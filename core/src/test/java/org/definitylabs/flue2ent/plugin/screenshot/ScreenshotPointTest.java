@@ -20,4 +20,16 @@ public class ScreenshotPointTest {
         assertThat(point.getY()).isEqualTo(10);
     }
 
+    @Test
+    public void equalsAndHashCode_areWellImplemented() {
+        ScreenshotPoint point = new ScreenshotPoint(1, 1);
+        assertThat(point).isEqualTo(point);
+        assertThat(point).isEqualTo(new ScreenshotPoint(1, 1));
+        assertThat(point).isNotEqualTo(new ScreenshotPoint(1, 2));
+        assertThat(point).isNotEqualTo(null);
+        assertThat(point).isNotEqualTo(new Object());
+
+        assertThat(point.hashCode()).isEqualTo(32);
+    }
+
 }

@@ -5,7 +5,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -28,7 +27,6 @@ import static org.mockito.Mockito.*;
 @PrepareForTest({ScreenshotImageCrop.class, ScreenshotImageResize.class, ImageIO.class, ScreenshotImagePixelComparator.class})
 public class ScreenshotImageTest {
 
-    @Mock
     private BufferedImage image;
 
     private ScreenshotImage screenshotImage;
@@ -38,6 +36,7 @@ public class ScreenshotImageTest {
 
     @Before
     public void beforeEach() {
+        image = PowerMockito.mock(BufferedImage.class);
         screenshotImage = new ScreenshotImage(image);
     }
 
@@ -133,6 +132,20 @@ public class ScreenshotImageTest {
         screenshotImage.accept(consumer);
 
         verify(consumer).accept(any(File.class));
+    }
+
+    @Test
+    public void equalsAndHashCode_areWellImplemented() {
+        BufferedImage anotherImage = mock(BufferedImage.class);
+
+        ScreenshotImage screenshotImage = new ScreenshotImage(image);
+        assertThat(screenshotImage).isEqualTo(screenshotImage);
+        assertThat(screenshotImage).isEqualTo(new ScreenshotImage(image));
+        assertThat(screenshotImage).isNotEqualTo(new ScreenshotImage(anotherImage));
+        assertThat(screenshotImage).isNotEqualTo(null);
+        assertThat(screenshotImage).isNotEqualTo(new Object());
+
+        assertThat(screenshotImage.hashCode()).isNotZero();
     }
 
 }
