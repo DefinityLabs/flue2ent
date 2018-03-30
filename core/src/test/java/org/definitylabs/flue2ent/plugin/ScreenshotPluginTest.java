@@ -1,12 +1,19 @@
 package org.definitylabs.flue2ent.plugin;
 
 import org.apache.commons.io.FileUtils;
+import org.definitylabs.flue2ent.plugin.screenshot.ScreenshotImage;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.function.Consumer;
@@ -14,6 +21,8 @@ import java.util.function.Consumer;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(ImageIO.class)
 public class ScreenshotPluginTest {
 
     @Rule
@@ -85,6 +94,40 @@ public class ScreenshotPluginTest {
             File folder = new File("screenshot");
             FileUtils.forceDeleteOnExit(folder);
         }
+    }
+
+    @Test
+    public void takeAnd_returnsScreenshotImage() throws Exception {
+        File file = mock(File.class);
+
+        RemoteWebDriver mockedDriver = mock(RemoteWebDriver.class);
+        when(mockedDriver.getScreenshotAs(OutputType.FILE)).thenReturn(file);
+
+        PowerMockito.mockStatic(ImageIO.class);
+        BufferedImage image = mock(BufferedImage.class);
+        PowerMockito.when(ImageIO.class, "read", file).thenReturn(image);
+
+        ScreenshotPlugin screenshotPlugin = new ScreenshotPlugin(mockedDriver);
+        ScreenshotImage screenshotImage = screenshotPlugin.takeAnd();
+
+        assertThat(screenshotImage).isEqualTo(new ScreenshotImage(image));
+    }
+
+    @Test
+    public void takeAnd_whenImageIOWriteThrowsIOException_throwsRuntimeException() throws Exception {
+        File file = mock(File.class);
+
+        RemoteWebDriver mockedDriver = mock(RemoteWebDriver.class);
+        when(mockedDriver.getScreenshotAs(OutputType.FILE)).thenReturn(file);
+
+        PowerMockito.mockStatic(ImageIO.class);
+        PowerMockito.doThrow(new IOException("Error")).when(ImageIO.class, "read", file);
+
+        expectedException.expect(RuntimeException.class);
+        expectedException.expectMessage("Error");
+
+        ScreenshotPlugin screenshotPlugin = new ScreenshotPlugin(mockedDriver);
+        screenshotPlugin.takeAnd();
     }
 
 }

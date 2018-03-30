@@ -53,4 +53,18 @@ public class ScreenshotImage {
         consumer.accept(getFile());
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ScreenshotImage that = (ScreenshotImage) o;
+
+        return image.equals(that.image);
+    }
+
+    @Override
+    public int hashCode() {
+        return image.hashCode();
+    }
 }

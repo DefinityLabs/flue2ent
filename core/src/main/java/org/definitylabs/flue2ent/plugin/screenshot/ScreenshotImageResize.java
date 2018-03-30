@@ -4,6 +4,8 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.function.Function;
 
+import static org.definitylabs.flue2ent.plugin.screenshot.ImageUtils.createImage;
+
 public class ScreenshotImageResize {
 
     private final BufferedImage image;
@@ -17,10 +19,10 @@ public class ScreenshotImageResize {
     }
 
     public ScreenshotImage to(int percent) {
-        int width = image.getWidth() * (percent / 100);
-        int height = image.getHeight() * (percent / 100);
+        int width = (int) (image.getWidth() * (percent / 100.0));
+        int height = (int) (image.getHeight() * (percent / 100.0));
 
-        BufferedImage resizedImage = new BufferedImage(width, height, image.getType());
+        BufferedImage resizedImage = createImage(width, height, image.getType());
         Graphics2D g = resizedImage.createGraphics();
         g.drawImage(image, 0, 0, width, height, null);
         g.dispose();

@@ -6,6 +6,10 @@ import java.util.Set;
 
 public class ScreenshotImagePixelComparator implements ScreenshotImageComparator {
 
+    private ScreenshotImagePixelComparator() {
+
+    }
+
     public static ScreenshotImageComparator pixelByPixel() {
         return new ScreenshotImagePixelComparator();
     }
@@ -27,7 +31,7 @@ public class ScreenshotImagePixelComparator implements ScreenshotImageComparator
             }
         }
 
-        return new ScreenshotImageDiff(image, notSamePoints);
+        return new ScreenshotImageDiff(referenceImage, image, notSamePoints);
     }
 
 }
