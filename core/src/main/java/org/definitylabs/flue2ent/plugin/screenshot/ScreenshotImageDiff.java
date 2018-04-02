@@ -37,6 +37,30 @@ public final class ScreenshotImageDiff {
     }
 
     public ScreenshotImage image(ScreenshotImageHighlighter highlighter) {
+        BufferedImage diffImage = createHighlightedImage(highlighter);
+        return new ScreenshotImage(diffImage);
+    }
+
+    public ScreenshotImage imageSideBySide() {
+        return imageSideBySide(highlightingArea());
+    }
+
+    public ScreenshotImage imageSideBySide(ScreenshotImageHighlighter highlighter) {
+        BufferedImage image = createHighlightedImage(highlighter);
+
+        int width = referenceImage.getWidth() + image.getWidth();
+        int height = Math.max(referenceImage.getHeight(), image.getHeight());
+
+        BufferedImage diffImage = createImage(width, height, image.getType());
+        Graphics2D g = diffImage.createGraphics();
+        g.drawImage(referenceImage, 0, 0, referenceImage.getWidth(), referenceImage.getHeight(), null);
+        g.drawImage(image, referenceImage.getWidth(), 0, image.getWidth(), image.getHeight(), null);
+        g.dispose();
+
+        return new ScreenshotImage(diffImage);
+    }
+
+    private BufferedImage createHighlightedImage(ScreenshotImageHighlighter highlighter) {
         int width = image.getWidth();
         int height = image.getHeight();
 
@@ -45,8 +69,7 @@ public final class ScreenshotImageDiff {
         g.drawImage(image, 0, 0, width, height, null);
         highlighter.highlight(g, notSamePoints);
         g.dispose();
-
-        return new ScreenshotImage(diffImage);
+        return diffImage;
     }
 
     public boolean isEqual() {

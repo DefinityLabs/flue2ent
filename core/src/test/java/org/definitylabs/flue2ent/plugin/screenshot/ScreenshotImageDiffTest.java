@@ -76,7 +76,7 @@ public class ScreenshotImageDiffTest {
     }
 
     @Test
-    public void ignoring_whenThereArePoints_returnsFalse() {
+    public void ignoring_whenThereArePoints_returnsNewDiff() {
         HashSet<ScreenshotPoint> notSamePoints = new HashSet<>();
 
         ScreenshotPoint pointOne = new ScreenshotPoint(2, 2);
@@ -92,7 +92,7 @@ public class ScreenshotImageDiffTest {
     }
 
     @Test
-    public void image_whenThereArePoints_returnsFalse() throws Exception {
+    public void image_returnsNewImage() throws Exception {
         HashSet<ScreenshotPoint> notSamePoints = new HashSet<>();
 
         BufferedImage diffImage = PowerMockito.mock(BufferedImage.class);
@@ -113,6 +113,45 @@ public class ScreenshotImageDiffTest {
 
         verify(g).drawImage(image, 0, 0, 10, 10, null);
         verify(highlighter).highlight(g, notSamePoints);
+        verify(g).dispose();
+
+        assertThat(screenshotImage).isEqualTo(new ScreenshotImage(diffImage));
+    }
+
+    @Test
+    public void imageSideBySide_returnsNewImage() throws Exception {
+        HashSet<ScreenshotPoint> notSamePoints = new HashSet<>();
+
+        BufferedImage diffImage = PowerMockito.mock(BufferedImage.class);
+        BufferedImage newImage = PowerMockito.mock(BufferedImage.class);
+        PowerMockito.mockStatic(ImageUtils.class);
+        PowerMockito.when(ImageUtils.class, "createImage", 20, 10, BufferedImage.TYPE_INT_RGB).thenReturn(diffImage);
+        PowerMockito.when(ImageUtils.class, "createImage", 10, 10, BufferedImage.TYPE_INT_RGB).thenReturn(newImage);
+
+        Graphics2D newImageGraphics = mock(Graphics2D.class);
+        when(newImage.createGraphics()).thenReturn(newImageGraphics);
+        when(newImage.getWidth()).thenReturn(10);
+        when(newImage.getHeight()).thenReturn(10);
+        when(newImage.getType()).thenReturn(BufferedImage.TYPE_INT_RGB);
+
+        ScreenshotImageHighlighter highlighter = mock(ScreenshotImageHighlighter.class);
+
+        PowerMockito.mockStatic(ScreenshotImageHighlighterFactory.class);
+        PowerMockito.when(ScreenshotImageHighlighterFactory.class, "highlightingArea").thenReturn(highlighter);
+
+        Graphics2D g = mock(Graphics2D.class);
+        when(diffImage.createGraphics()).thenReturn(g);
+
+        ScreenshotImageDiff diff = new ScreenshotImageDiff(referenceImage, image, notSamePoints);
+
+        ScreenshotImage screenshotImage = diff.imageSideBySide();
+
+        verify(newImageGraphics).drawImage(image, 0, 0, 10, 10, null);
+        verify(highlighter).highlight(newImageGraphics, notSamePoints);
+        verify(newImageGraphics).dispose();
+
+        verify(g).drawImage(referenceImage, 0, 0, 10, 10, null);
+        verify(g).drawImage(newImage, 10, 0, 10, 10, null);
         verify(g).dispose();
 
         assertThat(screenshotImage).isEqualTo(new ScreenshotImage(diffImage));
