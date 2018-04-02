@@ -1,5 +1,6 @@
 package org.definitylabs.flue2ent.plugin;
 
+import org.definitylabs.flue2ent.element.WebElementWrapper;
 import org.openqa.selenium.JavascriptExecutor;
 
 public class ScrollPlugin implements WebDriverPlugin {
@@ -24,6 +25,11 @@ public class ScrollPlugin implements WebDriverPlugin {
 
     public ScrollPlugin bottom() {
         driver.executeScript("window.scrollTo(0, document.body.scrollHeight);");
+        return this;
+    }
+
+    public ScrollPlugin to(WebElementWrapper element) {
+        driver.executeScript("arguments[0].scrollIntoView(true);", element.webElement());
         return this;
     }
 

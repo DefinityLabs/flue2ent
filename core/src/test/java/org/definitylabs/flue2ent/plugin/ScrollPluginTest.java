@@ -1,6 +1,8 @@
 package org.definitylabs.flue2ent.plugin;
 
+import org.definitylabs.flue2ent.element.WebElementWrapper;
 import org.junit.Test;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -77,6 +79,21 @@ public class ScrollPluginTest {
         ScrollPlugin result = scrollPlugin.to(100, 200);
 
         verify(mockedDriver).executeScript("window.scrollTo(100, 200);");
+
+        assertThat(result).isSameAs(scrollPlugin);
+    }
+
+    @Test
+    public void to_element_executesJavascript() {
+        RemoteWebDriver mockedDriver = mock(RemoteWebDriver.class);
+        ScrollPlugin scrollPlugin = new ScrollPlugin(mockedDriver);
+
+        WebElement webElement = mock(WebElement.class);
+        WebElementWrapper element = new WebElementWrapper(webElement);
+
+        ScrollPlugin result = scrollPlugin.to(element);
+
+        verify(mockedDriver).executeScript("arguments[0].scrollIntoView(true);", webElement);
 
         assertThat(result).isSameAs(scrollPlugin);
     }
