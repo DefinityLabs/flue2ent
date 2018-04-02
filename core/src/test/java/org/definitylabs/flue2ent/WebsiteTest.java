@@ -325,6 +325,16 @@ public class WebsiteTest {
     }
 
     @Test
+    public void window_returnsWindowPlugin() {
+        RemoteWebDriver mockedWebDriver = mock(RemoteWebDriver.class);
+        Website website = Website.with(mockedWebDriver).visit(TEST_WEBSITE_URL);
+
+        WindowPlugin windowPlugin = website.window();
+
+        assertThat(windowPlugin).isNotNull();
+    }
+
+    @Test
     public void page_returnsPagePlugin() {
         RemoteWebDriver mockedWebDriver = mock(RemoteWebDriver.class);
         Website website = Website.with(mockedWebDriver).visit(TEST_WEBSITE_URL);

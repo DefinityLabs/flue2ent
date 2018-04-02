@@ -127,6 +127,10 @@ public class Website {
         return driverPlugin(ScreenshotPlugin::new);
     }
 
+    public WindowPlugin window() {
+        return plugin(WindowPlugin::new);
+    }
+
     public ScrollPlugin scroll() {
         return driverPlugin(ScrollPlugin::new);
     }
