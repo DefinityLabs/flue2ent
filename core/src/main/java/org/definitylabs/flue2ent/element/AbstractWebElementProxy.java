@@ -4,6 +4,8 @@ import com.google.common.reflect.AbstractInvocationHandler;
 import org.openqa.selenium.By;
 
 import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
+import java.lang.management.ManagementFactory;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -54,11 +56,32 @@ public abstract class AbstractWebElementProxy extends AbstractInvocationHandler 
 
     private Object invokeDefaultMethod(Object proxy, Method method, Object[] args) throws Throwable {
         Class<?> declaringClass = method.getDeclaringClass();
+        if (isJava8()) {
+            return invokeDefaultMethodJava8(proxy, declaringClass, method, args);
+        } else {
+            return invokeDefaultMethodJava9OrHigher(proxy, declaringClass, method, args);
+        }
+    }
+
+    private static boolean isJava8() {
+        String version = ManagementFactory.getRuntimeMXBean().getSpecVersion();
+        return version.startsWith("1.8");
+    }
+
+    private Object invokeDefaultMethodJava8(Object proxy, Class<?> declaringClass, Method method, Object[] args) throws Throwable {
         Constructor<? extends MethodHandles.Lookup> constructor = MethodHandles.Lookup.class
                 .getDeclaredConstructor(Class.class, int.class);
         constructor.setAccessible(true);
         return constructor.newInstance(declaringClass, MethodHandles.Lookup.PRIVATE)
                 .unreflectSpecial(method, declaringClass)
+                .bindTo(proxy)
+                .invokeWithArguments(args);
+    }
+
+    private Object invokeDefaultMethodJava9OrHigher(Object proxy, Class<?> declaringClass, Method method, Object[] args) throws Throwable {
+        MethodType rt = MethodType.methodType(method.getReturnType());
+        return MethodHandles.lookup()
+                .findSpecial(declaringClass, method.getName(), rt, declaringClass)
                 .bindTo(proxy)
                 .invokeWithArguments(args);
     }
